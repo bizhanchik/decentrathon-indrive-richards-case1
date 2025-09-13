@@ -1,7 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { Upload, Image, CheckCircle, AlertCircle } from 'lucide-react';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
 
-export const UploadSection: React.FC = () => {
+interface UploadSectionProps {
+  onFileUpload: (file: File) => void;
+}
+
+export const UploadSection: React.FC<UploadSectionProps> = ({ onFileUpload }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -63,8 +69,14 @@ export const UploadSection: React.FC = () => {
     }
   };
 
+  const handleAnalyze = () => {
+    if (selectedFile) {
+      onFileUpload(selectedFile);
+    }
+  };
+
   return (
-    <section id="upload-section" className="min-h-screen flex items-center justify-center py-20 px-6">
+    <section className="min-h-screen flex items-center justify-center py-20 px-6">
       <div className="max-w-4xl mx-auto w-full">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
@@ -83,7 +95,8 @@ export const UploadSection: React.FC = () => {
             onDragOver={handleDrag}
             onDrop={handleDrop}
             onClick={triggerFileInput}
-            className={`relative border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 ${
+            className={cn(
+              "relative border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-300",
               dragActive
                 ? 'border-[#c1f21d] bg-[#c1f21d]/5 scale-105'
                 : uploadStatus === 'success'
@@ -91,7 +104,7 @@ export const UploadSection: React.FC = () => {
                 : uploadStatus === 'error'
                 ? 'border-red-500 bg-red-500/5'
                 : 'border-gray-600 hover:border-[#c1f21d]/50 hover:bg-[#c1f21d]/5'
-            }`}
+            )}
           >
             <input
               ref={fileInputRef}
@@ -103,9 +116,10 @@ export const UploadSection: React.FC = () => {
 
             {uploadStatus === 'idle' && (
               <>
-                <Upload className={`w-16 h-16 mx-auto mb-6 transition-colors ${
+                <Upload className={cn(
+                  "w-16 h-16 mx-auto mb-6 transition-colors",
                   dragActive ? 'text-[#c1f21d]' : 'text-gray-400'
-                }`} />
+                )} />
                 <h3 className="text-2xl font-semibold text-white mb-4">
                   {dragActive ? 'Drop your image here' : 'Upload Car Image'}
                 </h3>
@@ -155,15 +169,19 @@ export const UploadSection: React.FC = () => {
 
           {uploadStatus === 'success' && (
             <div className="mt-8 flex justify-center space-x-4">
-              <button
+              <Button
+                variant="outline"
                 onClick={resetUpload}
-                className="px-6 py-3 border border-gray-600 text-gray-300 font-semibold rounded-lg hover:border-gray-500 hover:text-white transition-colors"
+                className="border-gray-600 text-gray-300 hover:border-gray-500 hover:text-white hover:bg-transparent"
               >
                 Upload Another
-              </button>
-              <button className="px-8 py-3 bg-[#c1f21d] text-[#141414] font-semibold rounded-lg hover:bg-[#c1f21d]/90 transform hover:scale-105 transition-all duration-200">
+              </Button>
+              <Button
+                onClick={handleAnalyze}
+                className="bg-[#c1f21d] text-[#141414] hover:bg-[#c1f21d]/90 font-semibold transform hover:scale-105 transition-all duration-200"
+              >
                 Analyze Now
-              </button>
+              </Button>
             </div>
           )}
         </div>

@@ -1,0 +1,291 @@
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, CheckCircle, AlertTriangle, Shield } from 'lucide-react';
+import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Loader } from './ui/loader';
+import { cn } from '@/lib/utils';
+
+interface AnalysisScreenProps {
+  file: File;
+  onBack: () => void;
+}
+
+interface AnalysisResult {
+  cleanliness: {
+    score: number;
+    status: 'excellent' | 'good' | 'fair' | 'poor';
+    description: string;
+  };
+  integrity: {
+    damaged: boolean;
+    damageLevel: 'none' | 'minor' | 'moderate' | 'severe';
+    description: string;
+  };
+  heatmap: {
+    areas: Array<{
+      x: number;
+      y: number;
+      severity: 'low' | 'medium' | 'high';
+      description: string;
+    }>;
+  };
+}
+
+export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, onBack }) => {
+  const [isAnalyzing, setIsAnalyzing] = useState(true);
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [results, setResults] = useState<AnalysisResult | null>(null);
+
+  useEffect(() => {
+    // Create image URL
+    const url = URL.createObjectURL(file);
+    setImageUrl(url);
+
+    // Simulate analysis
+    const timer = setTimeout(() => {
+      setIsAnalyzing(false);
+      // Mock results
+      setResults({
+        cleanliness: {
+          score: 85,
+          status: 'good',
+          description: 'Vehicle appears well-maintained with minor dust accumulation'
+        },
+        integrity: {
+          damaged: true,
+          damageLevel: 'minor',
+          description: 'Minor scratches detected on front bumper and door panel'
+        },
+        heatmap: {
+          areas: [
+            { x: 25, y: 60, severity: 'medium', description: 'Front bumper scratch' },
+            { x: 70, y: 45, severity: 'low', description: 'Door panel scuff' },
+            { x: 15, y: 30, severity: 'low', description: 'Minor paint chip' }
+          ]
+        }
+      });
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+      URL.revokeObjectURL(url);
+    };
+  }, [file]);
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'excellent':
+      case 'good':
+        return 'text-[#c1f21d]';
+      case 'fair':
+        return 'text-yellow-400';
+      case 'poor':
+      case 'damaged':
+        return 'text-red-400';
+      default:
+        return 'text-gray-400';
+    }
+  };
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'low':
+        return 'bg-yellow-400';
+      case 'medium':
+        return 'bg-orange-400';
+      case 'high':
+        return 'bg-red-400';
+      default:
+        return 'bg-gray-400';
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#141414] py-8 px-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center mb-8">
+          <Button
+            variant="ghost"
+            onClick={onBack}
+            className="text-gray-300 hover:text-white hover:bg-gray-800 mr-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Upload
+          </Button>
+          <h1 className="text-3xl font-bold text-white">Vehicle Analysis</h1>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Image Section */}
+          <div className="relative">
+            <div className="relative rounded-2xl overflow-hidden bg-[#2c2c2c] border border-black">
+              <img
+                src={imageUrl}
+                alt="Uploaded vehicle"
+                className={cn(
+                  "w-full h-auto transition-transform duration-500",
+                  isAnalyzing ? "scale-105" : "scale-100"
+                )}
+              />
+              
+              {/* Analysis Loader Overlay */}
+              {isAnalyzing && (
+                <div className="absolute inset-0 bg-black/20">
+                  <Loader className="w-full h-full" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="bg-black/80 rounded-lg p-4 backdrop-blur-sm">
+                      <p className="text-[#c1f21d] font-semibold mb-2">Analyzing Vehicle...</p>
+                      <div className="w-full bg-gray-700 rounded-full h-2">
+                        <div 
+                          className="bg-[#c1f21d] h-2 rounded-full transition-all duration-300"
+                          style={{ width: '100%', animation: 'progress 3s ease-in-out' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Damage Heatmap Overlay */}
+              {!isAnalyzing && results && (
+                <div className="absolute inset-0">
+                  {results.heatmap.areas.map((area, index) => (
+                    <div
+                      key={index}
+                      className={cn(
+                        "absolute w-4 h-4 rounded-full animate-pulse cursor-pointer",
+                        getSeverityColor(area.severity)
+                      )}
+                      style={{
+                        left: `${area.x}%`,
+                        top: `${area.y}%`,
+                        transform: 'translate(-50%, -50%)',
+                        boxShadow: `0 0 20px ${area.severity === 'high' ? '#ef4444' : area.severity === 'medium' ? '#f97316' : '#eab308'}`
+                      }}
+                      title={area.description}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Results Section */}
+          <div className="space-y-6">
+            {isAnalyzing ? (
+              <div className="flex items-center justify-center h-64">
+                <div className="text-center">
+                  <div className="w-16 h-16 border-2 border-[#c1f21d] rounded-full animate-spin border-t-transparent mx-auto mb-4" />
+                  <p className="text-xl text-gray-300">Processing your image...</p>
+                  <p className="text-sm text-gray-500 mt-2">This may take a few moments</p>
+                </div>
+              </div>
+            ) : (
+              results && (
+                <div className="space-y-6 animate-fade-in">
+                  {/* Cleanliness Card */}
+                  <Card className="bg-[#2c2c2c] border-black">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center text-white">
+                        <Shield className="w-5 h-5 mr-2 text-[#c1f21d]" />
+                        Cleanliness Assessment
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-gray-300">Score:</span>
+                        <span className={cn("font-bold text-lg", getStatusColor(results.cleanliness.status))}>
+                          {results.cleanliness.score}/100
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-gray-300">Status:</span>
+                        <span className={cn("font-semibold capitalize", getStatusColor(results.cleanliness.status))}>
+                          {results.cleanliness.status}
+                        </span>
+                      </div>
+                      <p className="text-gray-400 text-sm">{results.cleanliness.description}</p>
+                    </CardContent>
+                  </Card>
+
+                  {/* Integrity Card */}
+                  <Card className="bg-[#2c2c2c] border-black">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center text-white">
+                        {results.integrity.damaged ? (
+                          <AlertTriangle className="w-5 h-5 mr-2 text-red-400" />
+                        ) : (
+                          <CheckCircle className="w-5 h-5 mr-2 text-[#c1f21d]" />
+                        )}
+                        Structural Integrity
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-gray-300">Condition:</span>
+                        <span className={cn(
+                          "font-semibold",
+                          results.integrity.damaged ? "text-red-400" : "text-[#c1f21d]"
+                        )}>
+                          {results.integrity.damaged ? 'Damaged' : 'Intact'}
+                        </span>
+                      </div>
+                      {results.integrity.damaged && (
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-gray-300">Damage Level:</span>
+                          <span className={cn("font-semibold capitalize", getStatusColor(results.integrity.damageLevel))}>
+                            {results.integrity.damageLevel}
+                          </span>
+                        </div>
+                      )}
+                      <p className="text-gray-400 text-sm">{results.integrity.description}</p>
+                    </CardContent>
+                  </Card>
+
+                  {/* Damage Heatmap Info */}
+                  {results.integrity.damaged && (
+                    <Card className="bg-[#2c2c2c] border-black">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-white">Damage Locations</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-gray-400 text-sm mb-4">
+                          Colored dots on the image indicate damage locations:
+                        </p>
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-3 h-3 bg-yellow-400 rounded-full" />
+                            <span className="text-gray-300 text-sm">Minor damage</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <div className="w-3 h-3 bg-orange-400 rounded-full" />
+                            <span className="text-gray-300 text-sm">Moderate damage</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <div className="w-3 h-3 bg-red-400 rounded-full" />
+                            <span className="text-gray-300 text-sm">Severe damage</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="flex space-x-4 pt-4">
+                    <Button
+                      onClick={onBack}
+                      className="flex-1 bg-[#c1f21d] text-[#141414] hover:bg-[#c1f21d]/90 font-semibold"
+                    >
+                      Analyze Another Image
+                    </Button>
+                  </div>
+                </div>
+              )
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
