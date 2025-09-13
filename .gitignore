@@ -205,3 +205,28 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project specific - Data folders and archives
+# Exclude large dataset folders and zip files to reduce repo size
+data1/
+data2/
+merged_dataset/
+*.zip
+data.zip
+data2.zip
+
+# Keep trained models but exclude training checkpoints
+# Keep runs/*/weights/*.pt (trained models)
+# Exclude intermediate training files
+runs/*/train/
+runs/*/val/
+runs/checkpoints/
+runs/*/events.out.tfevents.*
+runs/*/opt.yaml
+runs/*/hyp.yaml
+runs/*/results.csv
+runs/*/results.png
+runs/*/confusion_matrix.png
+runs/*/labels*.jpg
+runs/*/train_batch*.jpg
+runs/*/val_batch*.jpg

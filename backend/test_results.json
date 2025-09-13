@@ -1,0 +1,6679 @@
+{
+  "model_path": "../runs/car_defect_detection3/weights/best.pt",
+  "confidence_threshold": 0.3,
+  "iou_threshold": 0.45,
+  "class_names": [
+    "dent",
+    "dirt",
+    "scratch"
+  ],
+  "total_images": 174,
+  "results": [
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_6-ways-to-protect-your-car-door-from-scratches-614178_1024x1024_jpg.rf.b5e27f31f70324df17c1167b60c7affd.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        250.4,
+        418.8,
+        758.9,
+        690.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.57,
+          "total_area": 70430.0,
+          "bbox": [
+            323.1,
+            457.6,
+            686.2,
+            651.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.57,
+              "bbox": [
+                323.1,
+                457.6,
+                686.2,
+                651.5
+              ],
+              "area": 70430.0,
+              "center": [
+                504.7,
+                554.6
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_car-scratch-repair_jpg.rf.0c857f5eb88823b67362aad038bd5d12.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        689.0,
+        465.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.478,
+          "total_area": 291710.7,
+          "bbox": [
+            0.0,
+            0.0,
+            651.8,
+            447.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.478,
+              "bbox": [
+                0.0,
+                0.0,
+                651.8,
+                447.5
+              ],
+              "area": 291710.7,
+              "center": [
+                325.9,
+                223.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_crumpled-rear-fender-dents-scratches-260nw-2560630717_jpg.rf.0c24532626f08848e7210a1c90c49a8f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        389.0,
+        280.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_download-3-_jpeg.rf.1a8fea3e743ee4969c61dc3462ae0cb5.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        5.5,
+        300.0,
+        168.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.637,
+          "total_area": 31896.2,
+          "bbox": [
+            11.3,
+            31.9,
+            253.0,
+            163.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.637,
+              "bbox": [
+                11.3,
+                31.9,
+                253.0,
+                163.9
+              ],
+              "area": 31896.2,
+              "center": [
+                132.1,
+                97.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_download-5-_jpeg.rf.56410c1dd9b7ea238629cf6e8ad41911.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        274.0,
+        184.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_download-6-_jpeg.rf.afaaa6254a8fcaa72f906163a3375655.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        36.7,
+        210.0,
+        240.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.408,
+          "total_area": 33479.7,
+          "bbox": [
+            0.0,
+            69.1,
+            206.3,
+            231.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.408,
+              "bbox": [
+                0.0,
+                69.1,
+                206.3,
+                231.4
+              ],
+              "area": 33479.7,
+              "center": [
+                103.1,
+                150.3
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_GettyImages-168395673_jpg.rf.966282f88c52b34b1bcab54ff0150e0e.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        312.4,
+        23.3,
+        1318.7,
+        1028.1
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe dent",
+      "defect_groups": [
+        {
+          "defect_type": "dent",
+          "severity": "severe",
+          "confidence": 0.745,
+          "total_area": 515891.7,
+          "bbox": [
+            456.2,
+            166.9,
+            1175.0,
+            884.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 0,
+              "class_name": "dent",
+              "confidence": 0.745,
+              "bbox": [
+                456.2,
+                166.9,
+                1175.0,
+                884.6
+              ],
+              "area": 515891.7,
+              "center": [
+                815.6,
+                525.7
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-29T222650_004_jpeg.rf.8bfdf08849c23591923e8725903aad46.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        42.3,
+        105.0,
+        259.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.301,
+          "total_area": 15358.4,
+          "bbox": [
+            0.0,
+            77.4,
+            87.5,
+            253.0
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.301,
+              "bbox": [
+                0.0,
+                77.4,
+                87.5,
+                253.0
+              ],
+              "area": 15358.4,
+              "center": [
+                43.7,
+                165.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-29T222650_321_jpeg.rf.c849d584827bac1b850a0e4b959eea98.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        12.9,
+        44.2,
+        194.0,
+        259.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.444,
+          "total_area": 22308.9,
+          "bbox": [
+            40.6,
+            76.5,
+            178.8,
+            237.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.444,
+              "bbox": [
+                40.6,
+                76.5,
+                178.8,
+                237.8
+              ],
+              "area": 22308.9,
+              "center": [
+                109.7,
+                157.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-29T222650_497_jpeg.rf.61771295071f47b21853a983f12d09fb.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        37.6,
+        7.3,
+        290.4,
+        136.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.736,
+          "total_area": 16711.1,
+          "bbox": [
+            73.7,
+            25.8,
+            254.3,
+            118.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.736,
+              "bbox": [
+                73.7,
+                25.8,
+                254.3,
+                118.4
+              ],
+              "area": 16711.1,
+              "center": [
+                164.0,
+                72.1
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150750_082_jpeg.rf.442f160882776faba27af456c36c7933.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        311.0,
+        162.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150750_179_jpeg.rf.d0f3e4b5d7231704789903c0dae527fc.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        265.0,
+        190.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150750_269_jpeg.rf.ad119eb06c1defd042554958ef02571a.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        265.0,
+        190.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150750_564_jpeg.rf.3b00816bcc6bdcd6c2f2bb9c643130d5.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        38.8,
+        116.7,
+        91.1,
+        166.6
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.632,
+          "total_area": 1331.6,
+          "bbox": [
+            46.3,
+            123.8,
+            83.6,
+            159.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.632,
+              "bbox": [
+                46.3,
+                123.8,
+                83.6,
+                159.4
+              ],
+              "area": 1331.6,
+              "center": [
+                64.9,
+                141.6
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150751_420_jpeg.rf.b2fbec953f64db0bdf62c4fd8aa41bef.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        275.0,
+        183.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150751_691_jpeg.rf.a9738e10787a34a30b9c98cbca0e282d.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        262.0,
+        192.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150751_834_jpeg.rf.fe53f8196c61fc5fd2d8168fd8024d85.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        221.4,
+        22.5,
+        330.3,
+        134.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe dent",
+      "defect_groups": [
+        {
+          "defect_type": "dent",
+          "severity": "severe",
+          "confidence": 0.681,
+          "total_area": 6209.5,
+          "bbox": [
+            237.0,
+            38.5,
+            314.8,
+            118.3
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 0,
+              "class_name": "dent",
+              "confidence": 0.681,
+              "bbox": [
+                237.0,
+                38.5,
+                314.8,
+                118.3
+              ],
+              "area": 6209.5,
+              "center": [
+                275.9,
+                78.4
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150751_870_jpeg.rf.08b9463d77ef7a573e45107dac0388e4.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        18.7,
+        284.0,
+        177.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.618,
+          "total_area": 11153.8,
+          "bbox": [
+            129.6,
+            43.2,
+            282.9,
+            115.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.618,
+              "bbox": [
+                129.6,
+                43.2,
+                282.9,
+                115.9
+              ],
+              "area": 11153.8,
+              "center": [
+                206.2,
+                79.6
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.49,
+          "total_area": 14595.4,
+          "bbox": [
+            0.2,
+            52.8,
+            129.4,
+            165.7
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.49,
+              "bbox": [
+                0.2,
+                52.8,
+                129.4,
+                165.7
+              ],
+              "area": 14595.4,
+              "center": [
+                64.8,
+                109.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-72-_jpeg.rf.7ce777aa4b27ddfff1029c4caec56bbc.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        265.0,
+        190.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-94-_jpeg.rf.1e1a92d12e0429b3fe5274e9c4772115.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        275.0,
+        183.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_102_jpg.rf.adbe7423629476a0ca48d4731ddcb4c6.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        564.0,
+        752.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_105_jpg.rf.74ac5c300224f1a2f51660ee3d73e7c0.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        74.3,
+        90.0,
+        514.4,
+        752.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.673,
+          "total_area": 29299.7,
+          "bbox": [
+            161.7,
+            621.0,
+            391.1,
+            748.7
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.673,
+              "bbox": [
+                161.7,
+                621.0,
+                391.1,
+                748.7
+              ],
+              "area": 29299.7,
+              "center": [
+                276.4,
+                684.9
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.545,
+          "total_area": 105015.3,
+          "bbox": [
+            137.2,
+            199.8,
+            451.5,
+            533.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.545,
+              "bbox": [
+                137.2,
+                199.8,
+                451.5,
+                533.9
+              ],
+              "area": 105015.3,
+              "center": [
+                294.4,
+                366.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_129-Small-Car-Dent-Photos-Free_jpg.rf.ce9ef6a3a395445294658b105a45b43f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        580.1,
+        774.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.311,
+          "total_area": 287001.8,
+          "bbox": [
+            23.3,
+            32.6,
+            487.3,
+            651.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.311,
+              "bbox": [
+                23.3,
+                32.6,
+                487.3,
+                651.1
+              ],
+              "area": 287001.8,
+              "center": [
+                255.3,
+                341.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_140_jpg.rf.7555ab950d42db97a345ac44c751f55f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        131.3,
+        48.8,
+        524.8,
+        318.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.494,
+          "total_area": 54096.0,
+          "bbox": [
+            187.5,
+            87.3,
+            468.6,
+            279.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.494,
+              "bbox": [
+                187.5,
+                87.3,
+                468.6,
+                279.8
+              ],
+              "area": 54096.0,
+              "center": [
+                328.1,
+                183.6
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_157_jpg.rf.b40e15bef0bafb204c38afa504cc6cb9.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        1500.0,
+        1125.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_158_jpg.rf.acac67bfed2029861a709986113b7cb0.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        1500.0,
+        1125.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_15_jpg.rf.d3120ef1fe8ea56e6ae400cb0f6e9391.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        971.4,
+        418.9,
+        1448.0,
+        643.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.384,
+          "total_area": 54724.9,
+          "bbox": [
+            1039.5,
+            451.1,
+            1379.9,
+            611.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.384,
+              "bbox": [
+                1039.5,
+                451.1,
+                1379.9,
+                611.8
+              ],
+              "area": 54724.9,
+              "center": [
+                1209.7,
+                531.4
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_198_jpg.rf.f5d681480abd7400e716157a67da4283.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        181.6,
+        21.3,
+        240.2,
+        123.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.415,
+          "total_area": 3067.4,
+          "bbox": [
+            189.9,
+            35.9,
+            231.8,
+            109.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.415,
+              "bbox": [
+                189.9,
+                35.9,
+                231.8,
+                109.1
+              ],
+              "area": 3067.4,
+              "center": [
+                210.9,
+                72.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_1_jpg.rf.6b31069a1c025a000689066cf8d0753b.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        269.2,
+        440.5,
+        660.1,
+        502.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.311,
+          "total_area": 12249.3,
+          "bbox": [
+            325.0,
+            449.3,
+            604.2,
+            493.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.311,
+              "bbox": [
+                325.0,
+                449.3,
+                604.2,
+                493.2
+              ],
+              "area": 12249.3,
+              "center": [
+                464.6,
+                471.3
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_000d2787-b332-459e-94d5-7b115b79e9e4_jpg.rf.dc5e18af2e6535c0332314e626438515.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        38.9,
+        151.3,
+        694.2,
+        561.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.321,
+          "total_area": 136960.9,
+          "bbox": [
+            132.5,
+            209.9,
+            600.6,
+            502.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.321,
+              "bbox": [
+                132.5,
+                209.9,
+                600.6,
+                502.5
+              ],
+              "area": 136960.9,
+              "center": [
+                366.5,
+                356.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_002f6ebe-3473-458a-ab18-cb51d8cdeee5_jpg.rf.6f1f531a81ffcc18c6a626b0fb3decb4.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        75.5,
+        292.4,
+        800.0,
+        466.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.389,
+          "total_area": 66361.6,
+          "bbox": [
+            182.0,
+            317.4,
+            714.4,
+            442.0
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.389,
+              "bbox": [
+                182.0,
+                317.4,
+                714.4,
+                442.0
+              ],
+              "area": 66361.6,
+              "center": [
+                448.2,
+                379.7
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_007e503b-2ee9-485c-97c7-b005b7924871_JPG_jpg.rf.0a1516dea28a42b993a6e87f896ae253.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        216.7,
+        154.0,
+        377.1,
+        569.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.564,
+          "total_area": 11704.1,
+          "bbox": [
+            281.9,
+            213.4,
+            354.1,
+            375.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.564,
+              "bbox": [
+                281.9,
+                213.4,
+                354.1,
+                375.5
+              ],
+              "area": 11704.1,
+              "center": [
+                318.0,
+                294.4
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.35,
+          "total_area": 5913.3,
+          "bbox": [
+            239.6,
+            407.6,
+            297.2,
+            510.3
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.35,
+              "bbox": [
+                239.6,
+                407.6,
+                297.2,
+                510.3
+              ],
+              "area": 5913.3,
+              "center": [
+                268.4,
+                458.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_008ea639-5e86-4768-8c53-34a56812926b_jpeg_jpg.rf.2d741e29b6e0ecc18de1b305132f9cdc.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00a36e27-6f63-4965-bb71-9312f03d9db6_jpg.rf.f71498cb8cb81bf822a41b0b00214d66.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        22.0,
+        470.1,
+        604.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.454,
+          "total_area": 71499.8,
+          "bbox": [
+            8.9,
+            334.7,
+            391.8,
+            521.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.454,
+              "bbox": [
+                8.9,
+                334.7,
+                391.8,
+                521.5
+              ],
+              "area": 71499.8,
+              "center": [
+                200.3,
+                428.1
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.43,
+          "total_area": 84938.5,
+          "bbox": [
+            0.0,
+            105.3,
+            381.7,
+            327.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.43,
+              "bbox": [
+                0.0,
+                105.3,
+                381.7,
+                327.8
+              ],
+              "area": 84938.5,
+              "center": [
+                190.9,
+                216.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00b65b98-7c79-4228-a42f-445b6745ac04_JPG_jpg.rf.b730282c4c350eef7965f0e3f375ce5c.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        611.4,
+        258.1,
+        648.9,
+        339.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.521,
+          "total_area": 1561.2,
+          "bbox": [
+            616.8,
+            269.7,
+            643.5,
+            328.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.521,
+              "bbox": [
+                616.8,
+                269.7,
+                643.5,
+                328.1
+              ],
+              "area": 1561.2,
+              "center": [
+                630.2,
+                298.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00c10ddb-7d61-4088-91eb-ddfc2d8d798e_jpg.rf.eb03a91a7d9cccdbe7798f2b1ff7dcdb.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        220.4,
+        323.0,
+        498.9,
+        604.5
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.536,
+          "total_area": 39993.3,
+          "bbox": [
+            260.2,
+            363.2,
+            459.1,
+            564.3
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.536,
+              "bbox": [
+                260.2,
+                363.2,
+                459.1,
+                564.3
+              ],
+              "area": 39993.3,
+              "center": [
+                359.6,
+                463.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00c61c51-fcdc-49eb-8f96-5c8fe318bb24_jpg.rf.5367a0c8bb0cb157b7eeefe912a5ee20.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00f140c8-17a8-4205-a252-7ea23dfb6020_jpg.rf.594e92d47c3e6d97d01748bd82e9b763.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00f26aa0-eb02-4394-8526-85e5cfdfa32b_jpg.rf.ffa17338e026f13d66be505db1ff70fe.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        254.7,
+        512.9,
+        537.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.601,
+          "total_area": 86258.1,
+          "bbox": [
+            0.0,
+            295.1,
+            427.4,
+            496.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.601,
+              "bbox": [
+                0.0,
+                295.1,
+                427.4,
+                496.9
+              ],
+              "area": 86258.1,
+              "center": [
+                213.7,
+                396.0
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00fce82b-2867-43fd-bdb5-33b9417ebb6b_jpg.rf.a3bc2524b60d69a4ea04c193d351322d.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        277.3,
+        647.4,
+        554.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.478,
+          "total_area": 105625.7,
+          "bbox": [
+            6.3,
+            316.8,
+            540.6,
+            514.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.478,
+              "bbox": [
+                6.3,
+                316.8,
+                540.6,
+                514.5
+              ],
+              "area": 105625.7,
+              "center": [
+                273.4,
+                415.7
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00fe2010-05fe-4b1c-a097-0d51f615d173_jpg.rf.9d3e7ad0eb95bed831c12b4a5c430221.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        354.9,
+        376.6,
+        533.8,
+        510.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.608,
+          "total_area": 12243.7,
+          "bbox": [
+            380.4,
+            395.8,
+            508.2,
+            491.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.608,
+              "bbox": [
+                380.4,
+                395.8,
+                508.2,
+                491.6
+              ],
+              "area": 12243.7,
+              "center": [
+                444.3,
+                443.7
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00fea0a2-e7a6-4452-a253-7bc7b9733c55_jpg.rf.2771700c9998cbebe691408b2949d956.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        320.4,
+        200.6,
+        658.5,
+        461.4
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.655,
+          "total_area": 32521.3,
+          "bbox": [
+            368.7,
+            237.8,
+            610.2,
+            372.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.655,
+              "bbox": [
+                368.7,
+                237.8,
+                610.2,
+                372.5
+              ],
+              "area": 32521.3,
+              "center": [
+                489.5,
+                305.2
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.478,
+          "total_area": 5355.1,
+          "bbox": [
+            402.9,
+            367.2,
+            496.9,
+            424.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.478,
+              "bbox": [
+                402.9,
+                367.2,
+                496.9,
+                424.1
+              ],
+              "area": 5355.1,
+              "center": [
+                449.9,
+                395.7
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01aa468d-3535-4810-808b-69ddb368acad_jpg.rf.51c4bff393d974b3122a9eceddc2260d.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01b1df0c-5039-4921-af80-4f28cb411ca4_jpg.rf.ce00ac46cd90dd545b087d53c451c3a1.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        241.4,
+        271.8,
+        595.9,
+        595.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.366,
+          "total_area": 58629.5,
+          "bbox": [
+            292.0,
+            318.1,
+            545.3,
+            549.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.366,
+              "bbox": [
+                292.0,
+                318.1,
+                545.3,
+                549.6
+              ],
+              "area": 58629.5,
+              "center": [
+                418.7,
+                433.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01b93b75-78e3-4187-a1f4-51b678dc813e_jpg.rf.f0efedab211fc92fd204e2cb9096a712.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01da534f-1e02-4438-92ad-95a76fd8100c_jpg.rf.cb24cb28f88cc8baf72c67cc75b98567.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01e31c5c-8cbc-4139-9415-c2b3d3aa7c84_jpg.rf.0cda240dfeeedb91691704f1706ccced.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01ee8ebd-f0d6-4547-a53d-e7134269b7cb_jpg.rf.32097d4e1cbf0ad89b4629602c893d48.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        45.8,
+        724.4,
+        618.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.326,
+          "total_area": 234368.5,
+          "bbox": [
+            37.1,
+            127.7,
+            609.8,
+            536.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.326,
+              "bbox": [
+                37.1,
+                127.7,
+                609.8,
+                536.9
+              ],
+              "area": 234368.5,
+              "center": [
+                323.5,
+                332.3
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01f5881c-19d3-4454-af0a-1e18dd6af3c6_JPG_jpg.rf.44200711834088cddddd1657fa378133.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01fc566e-769c-4252-9164-342afd965b51_jpg.rf.acb6d05103d82152bba58cdad5673e9d.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02aff5a6-0a7d-44d2-b016-08cad7838ccb_JPG_jpg.rf.a8caefae46e5ce1b4fcd80469c38879d.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        90.7,
+        167.0,
+        734.4,
+        598.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.51,
+          "total_area": 28990.4,
+          "bbox": [
+            225.4,
+            402.2,
+            511.7,
+            503.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.51,
+              "bbox": [
+                225.4,
+                402.2,
+                511.7,
+                503.5
+              ],
+              "area": 28990.4,
+              "center": [
+                368.6,
+                452.8
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.46,
+          "total_area": 141851.9,
+          "bbox": [
+            182.7,
+            228.7,
+            642.5,
+            537.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.46,
+              "bbox": [
+                182.7,
+                228.7,
+                642.5,
+                537.2
+              ],
+              "area": 141851.9,
+              "center": [
+                412.6,
+                382.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02b69e9d-f4ea-4f66-99c2-05496c6c32df_jpg.rf.6aefb8a576a5b12db360c6cd4a3fdbf9.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        294.8,
+        201.0,
+        800.0,
+        485.5
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Slight scratch, Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "slight",
+          "confidence": 0.568,
+          "total_area": 4344.2,
+          "bbox": [
+            706.2,
+            241.7,
+            770.4,
+            309.3
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.568,
+              "bbox": [
+                706.2,
+                241.7,
+                770.4,
+                309.3
+              ],
+              "area": 4344.2,
+              "center": [
+                738.3,
+                275.5
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.515,
+          "total_area": 23547.0,
+          "bbox": [
+            375.9,
+            386.8,
+            781.7,
+            444.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.515,
+              "bbox": [
+                375.9,
+                386.8,
+                781.7,
+                444.8
+              ],
+              "area": 23547.0,
+              "center": [
+                578.8,
+                415.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02c847b9-ac0a-4f75-a538-bf3cbf19b272_jpg.rf.3115c21fec4fcafed5b2160cc732c61b.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02d0f858-e251-4141-8ef8-56ed9d57207b_jpg.rf.3ef18caef72df9752c73687d9328c56c.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        167.4,
+        304.4,
+        574.3,
+        553.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.596,
+          "total_area": 21939.2,
+          "bbox": [
+            303.7,
+            414.8,
+            516.2,
+            518.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.596,
+              "bbox": [
+                303.7,
+                414.8,
+                516.2,
+                518.1
+              ],
+              "area": 21939.2,
+              "center": [
+                410.0,
+                466.5
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.339,
+          "total_area": 12014.8,
+          "bbox": [
+            225.5,
+            340.0,
+            458.0,
+            391.7
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.339,
+              "bbox": [
+                225.5,
+                340.0,
+                458.0,
+                391.7
+              ],
+              "area": 12014.8,
+              "center": [
+                341.8,
+                365.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02d2cbcd-9452-4a2a-85ac-8e64857e014f_jpg.rf.b4795456d8489e42aaf8fbec023d4768.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        141.5,
+        445.2,
+        443.1,
+        591.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.684,
+          "total_area": 5743.1,
+          "bbox": [
+            305.4,
+            489.1,
+            400.0,
+            549.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.684,
+              "bbox": [
+                305.4,
+                489.1,
+                400.0,
+                549.8
+              ],
+              "area": 5743.1,
+              "center": [
+                352.7,
+                519.5
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.411,
+          "total_area": 4840.5,
+          "bbox": [
+            184.6,
+            466.1,
+            230.8,
+            570.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.411,
+              "bbox": [
+                184.6,
+                466.1,
+                230.8,
+                570.9
+              ],
+              "area": 4840.5,
+              "center": [
+                207.7,
+                518.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02da00a3-df4a-44cb-ad2c-d7ff47772b12_jpg.rf.7543d745d23601facdfa749cb36ee6a7.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        290.6,
+        307.6,
+        720.7,
+        504.1
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.396,
+          "total_area": 43124.4,
+          "bbox": [
+            352.0,
+            335.7,
+            659.2,
+            476.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.396,
+              "bbox": [
+                352.0,
+                335.7,
+                659.2,
+                476.1
+              ],
+              "area": 43124.4,
+              "center": [
+                505.6,
+                405.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02efa688-748d-4686-824f-b7e958b428f5_jpg.rf.9b261d4dafe7377bf7a8066d98c74f6b.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        302.9,
+        300.0,
+        482.1,
+        477.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.62,
+          "total_area": 16257.4,
+          "bbox": [
+            328.5,
+            325.4,
+            456.5,
+            452.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.62,
+              "bbox": [
+                328.5,
+                325.4,
+                456.5,
+                452.4
+              ],
+              "area": 16257.4,
+              "center": [
+                392.5,
+                388.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02f427d4-d1d9-4bf3-98ba-f0634af59400_jpg.rf.84473c78dc0e67a5a621dd4c00ae733b.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        128.2,
+        0.0,
+        665.4,
+        800.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Slight scratch, Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.759,
+          "total_area": 65393.3,
+          "bbox": [
+            251.6,
+            107.8,
+            588.6,
+            301.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.759,
+              "bbox": [
+                251.6,
+                107.8,
+                588.6,
+                301.9
+              ],
+              "area": 65393.3,
+              "center": [
+                420.1,
+                204.8
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "slight",
+          "confidence": 0.525,
+          "total_area": 7271.0,
+          "bbox": [
+            204.9,
+            625.8,
+            265.2,
+            746.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.525,
+              "bbox": [
+                204.9,
+                625.8,
+                265.2,
+                746.5
+              ],
+              "area": 7271.0,
+              "center": [
+                235.1,
+                686.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_03b86704-57d3-4dc8-b527-e3e107fa5bbc_jpg.rf.7089fcaf667ac713669819badf713b44.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_03d473c9-7328-43eb-9e89-6dc52bb6ca4a_jpg.rf.dbd506a43d46744e0379de0c86986749.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_03dd7f3c-e0d3-4b7a-8ba0-93858bd4ade6_jpg.rf.7d2622f936cd943a600dcdb6e6d6fa45.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        273.2,
+        122.8,
+        634.2,
+        376.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.688,
+          "total_area": 46690.4,
+          "bbox": [
+            324.8,
+            159.1,
+            582.6,
+            340.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.688,
+              "bbox": [
+                324.8,
+                159.1,
+                582.6,
+                340.1
+              ],
+              "area": 46690.4,
+              "center": [
+                453.7,
+                249.6
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_04b0299c-feb6-4c8c-9fc3-23b6a86024c5_jpg.rf.a42d040c25d5a761b5f885bf86dad98b.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        199.8,
+        362.2,
+        533.1,
+        782.6
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.386,
+          "total_area": 71469.7,
+          "bbox": [
+            247.4,
+            422.3,
+            485.5,
+            722.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.386,
+              "bbox": [
+                247.4,
+                422.3,
+                485.5,
+                722.5
+              ],
+              "area": 71469.7,
+              "center": [
+                366.5,
+                572.4
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_05ee42fb-6577-4a6c-b3f4-68c9d032205a_jpg.rf.fa30e5a79c10d6cda78924c51895f723.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        21.3,
+        24.4,
+        735.8,
+        708.6
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.417,
+          "total_area": 341746.0,
+          "bbox": [
+            123.4,
+            122.1,
+            633.7,
+            610.9
+          ],
+          "detection_count": 2,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.438,
+              "bbox": [
+                123.4,
+                122.1,
+                633.7,
+                610.9
+              ],
+              "area": 249420.6,
+              "center": [
+                378.6,
+                366.5
+              ]
+            },
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.396,
+              "bbox": [
+                147.8,
+                261.0,
+                453.8,
+                562.7
+              ],
+              "area": 92325.4,
+              "center": [
+                300.8,
+                411.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_06d25a37-9865-4009-a4a1-1530c37fd67d_jpg.rf.e446827ce4b3ed7d62c945546b51dd09.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_06d72405-06b8-4e5e-8c67-88748d06d4e9_jpg.rf.9cfbc110abcb51b97a1b32e9691c5d51.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        75.0,
+        119.1,
+        434.3,
+        189.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.372,
+          "total_area": 12980.2,
+          "bbox": [
+            126.3,
+            129.2,
+            383.0,
+            179.7
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.372,
+              "bbox": [
+                126.3,
+                129.2,
+                383.0,
+                179.7
+              ],
+              "area": 12980.2,
+              "center": [
+                254.7,
+                154.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_06dbea73-291d-40f8-aff6-a0c48a21f159_jpg.rf.80b431baa9e07291e2f36c51909bd726.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_07c7dbbc-a9c1-4e6a-9641-76df3d1b99fe_jpg.rf.1295b72a25f8c03f8cbde8c87b9318d8.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        290.7,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.721,
+          "total_area": 244304.3,
+          "bbox": [
+            43.0,
+            364.2,
+            707.9,
+            731.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.721,
+              "bbox": [
+                43.0,
+                364.2,
+                707.9,
+                731.6
+              ],
+              "area": 244304.3,
+              "center": [
+                375.4,
+                547.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_07f101ac-c661-4397-a039-f8681727ad5f_jpg.rf.4c0aaef0fb378031a9eb1e4ff497e66f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        281.5,
+        734.3,
+        535.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.368,
+          "total_area": 99999.4,
+          "bbox": [
+            73.2,
+            317.8,
+            624.1,
+            499.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.368,
+              "bbox": [
+                73.2,
+                317.8,
+                624.1,
+                499.4
+              ],
+              "area": 99999.4,
+              "center": [
+                348.7,
+                408.6
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_07f5670a-6166-4258-ad7c-f96a5ec90926_jpg.rf.ff3e1d6d4732ae3a1979a205690758aa.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        228.7,
+        268.3,
+        262.2,
+        400.1
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.457,
+          "total_area": 2247.0,
+          "bbox": [
+            233.5,
+            287.1,
+            257.4,
+            381.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.457,
+              "bbox": [
+                233.5,
+                287.1,
+                257.4,
+                381.2
+              ],
+              "area": 2247.0,
+              "center": [
+                245.5,
+                334.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_08bb9f34-4a7a-44d9-abc4-71fa657781c1_jpg.rf.36aa0fd08fc6651434ac56f4412f9b54.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_08d45b2b-9045-4fef-8409-5f54e508a714_jpg.rf.ebddc194edc46c83e7e0e62a080e4db8.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        216.0,
+        800.0,
+        594.2
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.302,
+          "total_area": 178639.1,
+          "bbox": [
+            90.3,
+            270.0,
+            751.5,
+            540.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.302,
+              "bbox": [
+                90.3,
+                270.0,
+                751.5,
+                540.2
+              ],
+              "area": 178639.1,
+              "center": [
+                420.9,
+                405.1
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_08f035a2-9b8a-456d-813a-8bc84096eda8_jpg.rf.90485c36643ba2dcd884d4756f714d0f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_08fb4a3f-aeda-4de6-84dc-fdbf5085eb85_jpg.rf.8859c653b739cf06ef79e0602eba8030.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        45.0,
+        116.4,
+        800.0,
+        301.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Slight scratch, Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.583,
+          "total_area": 15104.0,
+          "bbox": [
+            155.2,
+            193.6,
+            339.8,
+            275.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.583,
+              "bbox": [
+                155.2,
+                193.6,
+                339.8,
+                275.4
+              ],
+              "area": 15104.0,
+              "center": [
+                247.5,
+                234.5
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "slight",
+          "confidence": 0.411,
+          "total_area": 2281.2,
+          "bbox": [
+            672.2,
+            142.9,
+            706.2,
+            210.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.411,
+              "bbox": [
+                672.2,
+                142.9,
+                706.2,
+                210.1
+              ],
+              "area": 2281.2,
+              "center": [
+                689.2,
+                176.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_0a17037f-b4ec-4936-9d9f-99a546ce9543_jpg.rf.c1e84f8cb33097b5324bd7c88ad58b46.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        286.1,
+        224.2,
+        355.5,
+        397.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.492,
+          "total_area": 6149.5,
+          "bbox": [
+            296.0,
+            249.0,
+            345.6,
+            373.0
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.492,
+              "bbox": [
+                296.0,
+                249.0,
+                345.6,
+                373.0
+              ],
+              "area": 6149.5,
+              "center": [
+                320.8,
+                311.0
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_0a78dcea-8023-4418-94d7-95330ebeef08_JPG_jpg.rf.266f6c40d94f6241866e1a42b5bc0834.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        337.0,
+        298.1,
+        499.3,
+        550.2
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.844,
+          "total_area": 20872.7,
+          "bbox": [
+            360.2,
+            334.1,
+            476.1,
+            514.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.844,
+              "bbox": [
+                360.2,
+                334.1,
+                476.1,
+                514.2
+              ],
+              "area": 20872.7,
+              "center": [
+                418.1,
+                424.1
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_0ade5480-b10a-40f1-9bd4-b1394ce286f7_jpg.rf.314375472e8864c8e2ab23dbc4646057.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        190.6,
+        593.8,
+        608.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.62,
+          "total_area": 17376.8,
+          "bbox": [
+            77.8,
+            419.6,
+            212.5,
+            548.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.62,
+              "bbox": [
+                77.8,
+                419.6,
+                212.5,
+                548.6
+              ],
+              "area": 17376.8,
+              "center": [
+                145.2,
+                484.1
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.619,
+          "total_area": 77535.5,
+          "bbox": [
+            162.6,
+            250.2,
+            507.8,
+            474.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.619,
+              "bbox": [
+                162.6,
+                250.2,
+                507.8,
+                474.8
+              ],
+              "area": 77535.5,
+              "center": [
+                335.2,
+                362.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_0b111e45-9c2b-46bd-83c3-d7d7ba8053ab_jpg.rf.9a230ddd680ae4774e53515cf3b58dc1.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_0c6cfa69-c7ba-4db7-9f61-f9a14a1b7af6_jpg.rf.f961bf7c967491caec54edb621658960.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        628.0,
+        495.5
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.385,
+          "total_area": 212071.9,
+          "bbox": [
+            11.7,
+            0.0,
+            525.3,
+            412.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.385,
+              "bbox": [
+                11.7,
+                0.0,
+                525.3,
+                412.9
+              ],
+              "area": 212071.9,
+              "center": [
+                268.5,
+                206.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_26_jpg.rf.d67b2c4835b4b9ddba5a8e0dd0d11f25.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        1365.0,
+        2048.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_29_jpg.rf.15123c1ebec816bcebe26fcbd1cac3d3.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        2048.0,
+        1367.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_44_jpg.rf.8d6da7da48945574cd86fecb9665b9ec.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        44.7,
+        0.0,
+        564.0,
+        752.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.455,
+          "total_area": 69392.6,
+          "bbox": [
+            167.0,
+            328.0,
+            359.6,
+            688.3
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.455,
+              "bbox": [
+                167.0,
+                328.0,
+                359.6,
+                688.3
+              ],
+              "area": 69392.6,
+              "center": [
+                263.3,
+                508.1
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.338,
+          "total_area": 104319.4,
+          "bbox": [
+            131.1,
+            0.0,
+            562.9,
+            241.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.338,
+              "bbox": [
+                131.1,
+                0.0,
+                562.9,
+                241.6
+              ],
+              "area": 104319.4,
+              "center": [
+                347.0,
+                120.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_50_jpg.rf.bc15ed52e6df804d60b95cdfea37174f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        2048.0,
+        1151.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_52_jpg.rf.57476d52d4b21f8eb96b4ee782d60a6c.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        751.4,
+        277.7,
+        1396.3,
+        948.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.394,
+          "total_area": 220770.1,
+          "bbox": [
+            843.6,
+            373.6,
+            1304.1,
+            852.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.394,
+              "bbox": [
+                843.6,
+                373.6,
+                1304.1,
+                852.9
+              ],
+              "area": 220770.1,
+              "center": [
+                1073.9,
+                613.3
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_69_jpg.rf.76ed193a1df16296d265c350daa7c0d7.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        564.0,
+        423.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_7_jpg.rf.bfd1d8d0925e3f21d65eb203eb72ad59.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        1996.0,
+        2048.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_93_jpg.rf.e5dd86c3063db68a116326c289c24056.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        17.1,
+        13.0,
+        414.0,
+        205.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.657,
+          "total_area": 39006.7,
+          "bbox": [
+            73.8,
+            40.6,
+            357.3,
+            178.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.657,
+              "bbox": [
+                73.8,
+                40.6,
+                357.3,
+                178.2
+              ],
+              "area": 39006.7,
+              "center": [
+                215.5,
+                109.4
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_97_jpg.rf.e9e88d9729552332a5bacf02037e8f93.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        66.7,
+        222.7,
+        171.0,
+        303.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.358,
+          "total_area": 4309.4,
+          "bbox": [
+            81.6,
+            234.3,
+            156.1,
+            292.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.358,
+              "bbox": [
+                81.6,
+                234.3,
+                156.1,
+                292.2
+              ],
+              "area": 4309.4,
+              "center": [
+                118.9,
+                263.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_6-ways-to-protect-your-car-door-from-scratches-614178_1024x1024_jpg.rf.b5e27f31f70324df17c1167b60c7affd.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        250.4,
+        418.8,
+        758.9,
+        690.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.57,
+          "total_area": 70430.0,
+          "bbox": [
+            323.1,
+            457.6,
+            686.2,
+            651.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.57,
+              "bbox": [
+                323.1,
+                457.6,
+                686.2,
+                651.5
+              ],
+              "area": 70430.0,
+              "center": [
+                504.7,
+                554.6
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_car-scratch-repair_jpg.rf.0c857f5eb88823b67362aad038bd5d12.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        689.0,
+        465.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.478,
+          "total_area": 291710.7,
+          "bbox": [
+            0.0,
+            0.0,
+            651.8,
+            447.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.478,
+              "bbox": [
+                0.0,
+                0.0,
+                651.8,
+                447.5
+              ],
+              "area": 291710.7,
+              "center": [
+                325.9,
+                223.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_crumpled-rear-fender-dents-scratches-260nw-2560630717_jpg.rf.0c24532626f08848e7210a1c90c49a8f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        389.0,
+        280.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_download-3-_jpeg.rf.1a8fea3e743ee4969c61dc3462ae0cb5.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        5.5,
+        300.0,
+        168.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.637,
+          "total_area": 31896.2,
+          "bbox": [
+            11.3,
+            31.9,
+            253.0,
+            163.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.637,
+              "bbox": [
+                11.3,
+                31.9,
+                253.0,
+                163.9
+              ],
+              "area": 31896.2,
+              "center": [
+                132.1,
+                97.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_download-5-_jpeg.rf.56410c1dd9b7ea238629cf6e8ad41911.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        274.0,
+        184.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_download-6-_jpeg.rf.afaaa6254a8fcaa72f906163a3375655.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        36.7,
+        210.0,
+        240.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.408,
+          "total_area": 33479.7,
+          "bbox": [
+            0.0,
+            69.1,
+            206.3,
+            231.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.408,
+              "bbox": [
+                0.0,
+                69.1,
+                206.3,
+                231.4
+              ],
+              "area": 33479.7,
+              "center": [
+                103.1,
+                150.3
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_GettyImages-168395673_jpg.rf.966282f88c52b34b1bcab54ff0150e0e.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        312.4,
+        23.3,
+        1318.7,
+        1028.1
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe dent",
+      "defect_groups": [
+        {
+          "defect_type": "dent",
+          "severity": "severe",
+          "confidence": 0.745,
+          "total_area": 515891.7,
+          "bbox": [
+            456.2,
+            166.9,
+            1175.0,
+            884.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 0,
+              "class_name": "dent",
+              "confidence": 0.745,
+              "bbox": [
+                456.2,
+                166.9,
+                1175.0,
+                884.6
+              ],
+              "area": 515891.7,
+              "center": [
+                815.6,
+                525.7
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-29T222650_004_jpeg.rf.8bfdf08849c23591923e8725903aad46.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        42.3,
+        105.0,
+        259.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.301,
+          "total_area": 15358.4,
+          "bbox": [
+            0.0,
+            77.4,
+            87.5,
+            253.0
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.301,
+              "bbox": [
+                0.0,
+                77.4,
+                87.5,
+                253.0
+              ],
+              "area": 15358.4,
+              "center": [
+                43.7,
+                165.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-29T222650_321_jpeg.rf.c849d584827bac1b850a0e4b959eea98.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        12.9,
+        44.2,
+        194.0,
+        259.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.444,
+          "total_area": 22308.9,
+          "bbox": [
+            40.6,
+            76.5,
+            178.8,
+            237.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.444,
+              "bbox": [
+                40.6,
+                76.5,
+                178.8,
+                237.8
+              ],
+              "area": 22308.9,
+              "center": [
+                109.7,
+                157.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-29T222650_497_jpeg.rf.61771295071f47b21853a983f12d09fb.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        37.6,
+        7.3,
+        290.4,
+        136.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.736,
+          "total_area": 16711.1,
+          "bbox": [
+            73.7,
+            25.8,
+            254.3,
+            118.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.736,
+              "bbox": [
+                73.7,
+                25.8,
+                254.3,
+                118.4
+              ],
+              "area": 16711.1,
+              "center": [
+                164.0,
+                72.1
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150750_082_jpeg.rf.442f160882776faba27af456c36c7933.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        311.0,
+        162.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150750_179_jpeg.rf.d0f3e4b5d7231704789903c0dae527fc.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        265.0,
+        190.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150750_269_jpeg.rf.ad119eb06c1defd042554958ef02571a.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        265.0,
+        190.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150750_564_jpeg.rf.3b00816bcc6bdcd6c2f2bb9c643130d5.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        38.8,
+        116.7,
+        91.1,
+        166.6
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.632,
+          "total_area": 1331.6,
+          "bbox": [
+            46.3,
+            123.8,
+            83.6,
+            159.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.632,
+              "bbox": [
+                46.3,
+                123.8,
+                83.6,
+                159.4
+              ],
+              "area": 1331.6,
+              "center": [
+                64.9,
+                141.6
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150751_420_jpeg.rf.b2fbec953f64db0bdf62c4fd8aa41bef.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        275.0,
+        183.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150751_691_jpeg.rf.a9738e10787a34a30b9c98cbca0e282d.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        262.0,
+        192.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150751_834_jpeg.rf.fe53f8196c61fc5fd2d8168fd8024d85.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        221.4,
+        22.5,
+        330.3,
+        134.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe dent",
+      "defect_groups": [
+        {
+          "defect_type": "dent",
+          "severity": "severe",
+          "confidence": 0.681,
+          "total_area": 6209.5,
+          "bbox": [
+            237.0,
+            38.5,
+            314.8,
+            118.3
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 0,
+              "class_name": "dent",
+              "confidence": 0.681,
+              "bbox": [
+                237.0,
+                38.5,
+                314.8,
+                118.3
+              ],
+              "area": 6209.5,
+              "center": [
+                275.9,
+                78.4
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-2025-01-31T150751_870_jpeg.rf.08b9463d77ef7a573e45107dac0388e4.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        18.7,
+        284.0,
+        177.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.618,
+          "total_area": 11153.8,
+          "bbox": [
+            129.6,
+            43.2,
+            282.9,
+            115.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.618,
+              "bbox": [
+                129.6,
+                43.2,
+                282.9,
+                115.9
+              ],
+              "area": 11153.8,
+              "center": [
+                206.2,
+                79.6
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.49,
+          "total_area": 14595.4,
+          "bbox": [
+            0.2,
+            52.8,
+            129.4,
+            165.7
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.49,
+              "bbox": [
+                0.2,
+                52.8,
+                129.4,
+                165.7
+              ],
+              "area": 14595.4,
+              "center": [
+                64.8,
+                109.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-72-_jpeg.rf.7ce777aa4b27ddfff1029c4caec56bbc.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        265.0,
+        190.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data1_images-94-_jpeg.rf.1e1a92d12e0429b3fe5274e9c4772115.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        275.0,
+        183.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_102_jpg.rf.adbe7423629476a0ca48d4731ddcb4c6.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        564.0,
+        752.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_105_jpg.rf.74ac5c300224f1a2f51660ee3d73e7c0.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        74.3,
+        90.0,
+        514.4,
+        752.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.673,
+          "total_area": 29299.7,
+          "bbox": [
+            161.7,
+            621.0,
+            391.1,
+            748.7
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.673,
+              "bbox": [
+                161.7,
+                621.0,
+                391.1,
+                748.7
+              ],
+              "area": 29299.7,
+              "center": [
+                276.4,
+                684.9
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.545,
+          "total_area": 105015.3,
+          "bbox": [
+            137.2,
+            199.8,
+            451.5,
+            533.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.545,
+              "bbox": [
+                137.2,
+                199.8,
+                451.5,
+                533.9
+              ],
+              "area": 105015.3,
+              "center": [
+                294.4,
+                366.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_129-Small-Car-Dent-Photos-Free_jpg.rf.ce9ef6a3a395445294658b105a45b43f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        580.1,
+        774.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.311,
+          "total_area": 287001.8,
+          "bbox": [
+            23.3,
+            32.6,
+            487.3,
+            651.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.311,
+              "bbox": [
+                23.3,
+                32.6,
+                487.3,
+                651.1
+              ],
+              "area": 287001.8,
+              "center": [
+                255.3,
+                341.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_140_jpg.rf.7555ab950d42db97a345ac44c751f55f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        131.3,
+        48.8,
+        524.8,
+        318.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.494,
+          "total_area": 54096.0,
+          "bbox": [
+            187.5,
+            87.3,
+            468.6,
+            279.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.494,
+              "bbox": [
+                187.5,
+                87.3,
+                468.6,
+                279.8
+              ],
+              "area": 54096.0,
+              "center": [
+                328.1,
+                183.6
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_157_jpg.rf.b40e15bef0bafb204c38afa504cc6cb9.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        1500.0,
+        1125.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_158_jpg.rf.acac67bfed2029861a709986113b7cb0.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        1500.0,
+        1125.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_15_jpg.rf.d3120ef1fe8ea56e6ae400cb0f6e9391.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        971.4,
+        418.9,
+        1448.0,
+        643.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.384,
+          "total_area": 54724.9,
+          "bbox": [
+            1039.5,
+            451.1,
+            1379.9,
+            611.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.384,
+              "bbox": [
+                1039.5,
+                451.1,
+                1379.9,
+                611.8
+              ],
+              "area": 54724.9,
+              "center": [
+                1209.7,
+                531.4
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_198_jpg.rf.f5d681480abd7400e716157a67da4283.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        181.6,
+        21.3,
+        240.2,
+        123.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.415,
+          "total_area": 3067.4,
+          "bbox": [
+            189.9,
+            35.9,
+            231.8,
+            109.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.415,
+              "bbox": [
+                189.9,
+                35.9,
+                231.8,
+                109.1
+              ],
+              "area": 3067.4,
+              "center": [
+                210.9,
+                72.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_1_jpg.rf.6b31069a1c025a000689066cf8d0753b.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        269.2,
+        440.5,
+        660.1,
+        502.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.311,
+          "total_area": 12249.3,
+          "bbox": [
+            325.0,
+            449.3,
+            604.2,
+            493.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.311,
+              "bbox": [
+                325.0,
+                449.3,
+                604.2,
+                493.2
+              ],
+              "area": 12249.3,
+              "center": [
+                464.6,
+                471.3
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_000d2787-b332-459e-94d5-7b115b79e9e4_jpg.rf.dc5e18af2e6535c0332314e626438515.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        38.9,
+        151.3,
+        694.2,
+        561.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.321,
+          "total_area": 136960.9,
+          "bbox": [
+            132.5,
+            209.9,
+            600.6,
+            502.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.321,
+              "bbox": [
+                132.5,
+                209.9,
+                600.6,
+                502.5
+              ],
+              "area": 136960.9,
+              "center": [
+                366.5,
+                356.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_002f6ebe-3473-458a-ab18-cb51d8cdeee5_jpg.rf.6f1f531a81ffcc18c6a626b0fb3decb4.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        75.5,
+        292.4,
+        800.0,
+        466.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.389,
+          "total_area": 66361.6,
+          "bbox": [
+            182.0,
+            317.4,
+            714.4,
+            442.0
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.389,
+              "bbox": [
+                182.0,
+                317.4,
+                714.4,
+                442.0
+              ],
+              "area": 66361.6,
+              "center": [
+                448.2,
+                379.7
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_007e503b-2ee9-485c-97c7-b005b7924871_JPG_jpg.rf.0a1516dea28a42b993a6e87f896ae253.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        216.7,
+        154.0,
+        377.1,
+        569.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.564,
+          "total_area": 11704.1,
+          "bbox": [
+            281.9,
+            213.4,
+            354.1,
+            375.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.564,
+              "bbox": [
+                281.9,
+                213.4,
+                354.1,
+                375.5
+              ],
+              "area": 11704.1,
+              "center": [
+                318.0,
+                294.4
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.35,
+          "total_area": 5913.3,
+          "bbox": [
+            239.6,
+            407.6,
+            297.2,
+            510.3
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.35,
+              "bbox": [
+                239.6,
+                407.6,
+                297.2,
+                510.3
+              ],
+              "area": 5913.3,
+              "center": [
+                268.4,
+                458.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_008ea639-5e86-4768-8c53-34a56812926b_jpeg_jpg.rf.2d741e29b6e0ecc18de1b305132f9cdc.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00a36e27-6f63-4965-bb71-9312f03d9db6_jpg.rf.f71498cb8cb81bf822a41b0b00214d66.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        22.0,
+        470.1,
+        604.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.454,
+          "total_area": 71499.8,
+          "bbox": [
+            8.9,
+            334.7,
+            391.8,
+            521.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.454,
+              "bbox": [
+                8.9,
+                334.7,
+                391.8,
+                521.5
+              ],
+              "area": 71499.8,
+              "center": [
+                200.3,
+                428.1
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.43,
+          "total_area": 84938.5,
+          "bbox": [
+            0.0,
+            105.3,
+            381.7,
+            327.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.43,
+              "bbox": [
+                0.0,
+                105.3,
+                381.7,
+                327.8
+              ],
+              "area": 84938.5,
+              "center": [
+                190.9,
+                216.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00b65b98-7c79-4228-a42f-445b6745ac04_JPG_jpg.rf.b730282c4c350eef7965f0e3f375ce5c.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        611.4,
+        258.1,
+        648.9,
+        339.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.521,
+          "total_area": 1561.2,
+          "bbox": [
+            616.8,
+            269.7,
+            643.5,
+            328.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.521,
+              "bbox": [
+                616.8,
+                269.7,
+                643.5,
+                328.1
+              ],
+              "area": 1561.2,
+              "center": [
+                630.2,
+                298.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00c10ddb-7d61-4088-91eb-ddfc2d8d798e_jpg.rf.eb03a91a7d9cccdbe7798f2b1ff7dcdb.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        220.4,
+        323.0,
+        498.9,
+        604.5
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.536,
+          "total_area": 39993.3,
+          "bbox": [
+            260.2,
+            363.2,
+            459.1,
+            564.3
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.536,
+              "bbox": [
+                260.2,
+                363.2,
+                459.1,
+                564.3
+              ],
+              "area": 39993.3,
+              "center": [
+                359.6,
+                463.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00c61c51-fcdc-49eb-8f96-5c8fe318bb24_jpg.rf.5367a0c8bb0cb157b7eeefe912a5ee20.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00f140c8-17a8-4205-a252-7ea23dfb6020_jpg.rf.594e92d47c3e6d97d01748bd82e9b763.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00f26aa0-eb02-4394-8526-85e5cfdfa32b_jpg.rf.ffa17338e026f13d66be505db1ff70fe.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        254.7,
+        512.9,
+        537.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.601,
+          "total_area": 86258.1,
+          "bbox": [
+            0.0,
+            295.1,
+            427.4,
+            496.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.601,
+              "bbox": [
+                0.0,
+                295.1,
+                427.4,
+                496.9
+              ],
+              "area": 86258.1,
+              "center": [
+                213.7,
+                396.0
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00fce82b-2867-43fd-bdb5-33b9417ebb6b_jpg.rf.a3bc2524b60d69a4ea04c193d351322d.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        277.3,
+        647.4,
+        554.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.478,
+          "total_area": 105625.7,
+          "bbox": [
+            6.3,
+            316.8,
+            540.6,
+            514.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.478,
+              "bbox": [
+                6.3,
+                316.8,
+                540.6,
+                514.5
+              ],
+              "area": 105625.7,
+              "center": [
+                273.4,
+                415.7
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00fe2010-05fe-4b1c-a097-0d51f615d173_jpg.rf.9d3e7ad0eb95bed831c12b4a5c430221.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        354.9,
+        376.6,
+        533.8,
+        510.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.608,
+          "total_area": 12243.7,
+          "bbox": [
+            380.4,
+            395.8,
+            508.2,
+            491.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.608,
+              "bbox": [
+                380.4,
+                395.8,
+                508.2,
+                491.6
+              ],
+              "area": 12243.7,
+              "center": [
+                444.3,
+                443.7
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_00fea0a2-e7a6-4452-a253-7bc7b9733c55_jpg.rf.2771700c9998cbebe691408b2949d956.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        320.4,
+        200.6,
+        658.5,
+        461.4
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.655,
+          "total_area": 32521.3,
+          "bbox": [
+            368.7,
+            237.8,
+            610.2,
+            372.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.655,
+              "bbox": [
+                368.7,
+                237.8,
+                610.2,
+                372.5
+              ],
+              "area": 32521.3,
+              "center": [
+                489.5,
+                305.2
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.478,
+          "total_area": 5355.1,
+          "bbox": [
+            402.9,
+            367.2,
+            496.9,
+            424.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.478,
+              "bbox": [
+                402.9,
+                367.2,
+                496.9,
+                424.1
+              ],
+              "area": 5355.1,
+              "center": [
+                449.9,
+                395.7
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01aa468d-3535-4810-808b-69ddb368acad_jpg.rf.51c4bff393d974b3122a9eceddc2260d.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01b1df0c-5039-4921-af80-4f28cb411ca4_jpg.rf.ce00ac46cd90dd545b087d53c451c3a1.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        241.4,
+        271.8,
+        595.9,
+        595.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.366,
+          "total_area": 58629.5,
+          "bbox": [
+            292.0,
+            318.1,
+            545.3,
+            549.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.366,
+              "bbox": [
+                292.0,
+                318.1,
+                545.3,
+                549.6
+              ],
+              "area": 58629.5,
+              "center": [
+                418.7,
+                433.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01b93b75-78e3-4187-a1f4-51b678dc813e_jpg.rf.f0efedab211fc92fd204e2cb9096a712.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01da534f-1e02-4438-92ad-95a76fd8100c_jpg.rf.cb24cb28f88cc8baf72c67cc75b98567.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01e31c5c-8cbc-4139-9415-c2b3d3aa7c84_jpg.rf.0cda240dfeeedb91691704f1706ccced.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01ee8ebd-f0d6-4547-a53d-e7134269b7cb_jpg.rf.32097d4e1cbf0ad89b4629602c893d48.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        45.8,
+        724.4,
+        618.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.326,
+          "total_area": 234368.5,
+          "bbox": [
+            37.1,
+            127.7,
+            609.8,
+            536.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.326,
+              "bbox": [
+                37.1,
+                127.7,
+                609.8,
+                536.9
+              ],
+              "area": 234368.5,
+              "center": [
+                323.5,
+                332.3
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01f5881c-19d3-4454-af0a-1e18dd6af3c6_JPG_jpg.rf.44200711834088cddddd1657fa378133.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_01fc566e-769c-4252-9164-342afd965b51_jpg.rf.acb6d05103d82152bba58cdad5673e9d.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02aff5a6-0a7d-44d2-b016-08cad7838ccb_JPG_jpg.rf.a8caefae46e5ce1b4fcd80469c38879d.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        90.7,
+        167.0,
+        734.4,
+        598.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.51,
+          "total_area": 28990.4,
+          "bbox": [
+            225.4,
+            402.2,
+            511.7,
+            503.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.51,
+              "bbox": [
+                225.4,
+                402.2,
+                511.7,
+                503.5
+              ],
+              "area": 28990.4,
+              "center": [
+                368.6,
+                452.8
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.46,
+          "total_area": 141851.9,
+          "bbox": [
+            182.7,
+            228.7,
+            642.5,
+            537.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.46,
+              "bbox": [
+                182.7,
+                228.7,
+                642.5,
+                537.2
+              ],
+              "area": 141851.9,
+              "center": [
+                412.6,
+                382.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02b69e9d-f4ea-4f66-99c2-05496c6c32df_jpg.rf.6aefb8a576a5b12db360c6cd4a3fdbf9.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        294.8,
+        201.0,
+        800.0,
+        485.5
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Slight scratch, Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "slight",
+          "confidence": 0.568,
+          "total_area": 4344.2,
+          "bbox": [
+            706.2,
+            241.7,
+            770.4,
+            309.3
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.568,
+              "bbox": [
+                706.2,
+                241.7,
+                770.4,
+                309.3
+              ],
+              "area": 4344.2,
+              "center": [
+                738.3,
+                275.5
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.515,
+          "total_area": 23547.0,
+          "bbox": [
+            375.9,
+            386.8,
+            781.7,
+            444.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.515,
+              "bbox": [
+                375.9,
+                386.8,
+                781.7,
+                444.8
+              ],
+              "area": 23547.0,
+              "center": [
+                578.8,
+                415.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02c847b9-ac0a-4f75-a538-bf3cbf19b272_jpg.rf.3115c21fec4fcafed5b2160cc732c61b.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02d0f858-e251-4141-8ef8-56ed9d57207b_jpg.rf.3ef18caef72df9752c73687d9328c56c.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        167.4,
+        304.4,
+        574.3,
+        553.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.596,
+          "total_area": 21939.2,
+          "bbox": [
+            303.7,
+            414.8,
+            516.2,
+            518.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.596,
+              "bbox": [
+                303.7,
+                414.8,
+                516.2,
+                518.1
+              ],
+              "area": 21939.2,
+              "center": [
+                410.0,
+                466.5
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.339,
+          "total_area": 12014.8,
+          "bbox": [
+            225.5,
+            340.0,
+            458.0,
+            391.7
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.339,
+              "bbox": [
+                225.5,
+                340.0,
+                458.0,
+                391.7
+              ],
+              "area": 12014.8,
+              "center": [
+                341.8,
+                365.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02d2cbcd-9452-4a2a-85ac-8e64857e014f_jpg.rf.b4795456d8489e42aaf8fbec023d4768.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        141.5,
+        445.2,
+        443.1,
+        591.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.684,
+          "total_area": 5743.1,
+          "bbox": [
+            305.4,
+            489.1,
+            400.0,
+            549.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.684,
+              "bbox": [
+                305.4,
+                489.1,
+                400.0,
+                549.8
+              ],
+              "area": 5743.1,
+              "center": [
+                352.7,
+                519.5
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.411,
+          "total_area": 4840.5,
+          "bbox": [
+            184.6,
+            466.1,
+            230.8,
+            570.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.411,
+              "bbox": [
+                184.6,
+                466.1,
+                230.8,
+                570.9
+              ],
+              "area": 4840.5,
+              "center": [
+                207.7,
+                518.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02da00a3-df4a-44cb-ad2c-d7ff47772b12_jpg.rf.7543d745d23601facdfa749cb36ee6a7.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        290.6,
+        307.6,
+        720.7,
+        504.1
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.396,
+          "total_area": 43124.4,
+          "bbox": [
+            352.0,
+            335.7,
+            659.2,
+            476.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.396,
+              "bbox": [
+                352.0,
+                335.7,
+                659.2,
+                476.1
+              ],
+              "area": 43124.4,
+              "center": [
+                505.6,
+                405.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02efa688-748d-4686-824f-b7e958b428f5_jpg.rf.9b261d4dafe7377bf7a8066d98c74f6b.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        302.9,
+        300.0,
+        482.1,
+        477.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.62,
+          "total_area": 16257.4,
+          "bbox": [
+            328.5,
+            325.4,
+            456.5,
+            452.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.62,
+              "bbox": [
+                328.5,
+                325.4,
+                456.5,
+                452.4
+              ],
+              "area": 16257.4,
+              "center": [
+                392.5,
+                388.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_02f427d4-d1d9-4bf3-98ba-f0634af59400_jpg.rf.84473c78dc0e67a5a621dd4c00ae733b.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        128.2,
+        0.0,
+        665.4,
+        800.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Slight scratch, Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.759,
+          "total_area": 65393.3,
+          "bbox": [
+            251.6,
+            107.8,
+            588.6,
+            301.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.759,
+              "bbox": [
+                251.6,
+                107.8,
+                588.6,
+                301.9
+              ],
+              "area": 65393.3,
+              "center": [
+                420.1,
+                204.8
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "slight",
+          "confidence": 0.525,
+          "total_area": 7271.0,
+          "bbox": [
+            204.9,
+            625.8,
+            265.2,
+            746.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.525,
+              "bbox": [
+                204.9,
+                625.8,
+                265.2,
+                746.5
+              ],
+              "area": 7271.0,
+              "center": [
+                235.1,
+                686.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_03b86704-57d3-4dc8-b527-e3e107fa5bbc_jpg.rf.7089fcaf667ac713669819badf713b44.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_03d473c9-7328-43eb-9e89-6dc52bb6ca4a_jpg.rf.dbd506a43d46744e0379de0c86986749.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_03dd7f3c-e0d3-4b7a-8ba0-93858bd4ade6_jpg.rf.7d2622f936cd943a600dcdb6e6d6fa45.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        273.2,
+        122.8,
+        634.2,
+        376.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.688,
+          "total_area": 46690.4,
+          "bbox": [
+            324.8,
+            159.1,
+            582.6,
+            340.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.688,
+              "bbox": [
+                324.8,
+                159.1,
+                582.6,
+                340.1
+              ],
+              "area": 46690.4,
+              "center": [
+                453.7,
+                249.6
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_04b0299c-feb6-4c8c-9fc3-23b6a86024c5_jpg.rf.a42d040c25d5a761b5f885bf86dad98b.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        199.8,
+        362.2,
+        533.1,
+        782.6
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.386,
+          "total_area": 71469.7,
+          "bbox": [
+            247.4,
+            422.3,
+            485.5,
+            722.5
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.386,
+              "bbox": [
+                247.4,
+                422.3,
+                485.5,
+                722.5
+              ],
+              "area": 71469.7,
+              "center": [
+                366.5,
+                572.4
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_05ee42fb-6577-4a6c-b3f4-68c9d032205a_jpg.rf.fa30e5a79c10d6cda78924c51895f723.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        21.3,
+        24.4,
+        735.8,
+        708.6
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.417,
+          "total_area": 341746.0,
+          "bbox": [
+            123.4,
+            122.1,
+            633.7,
+            610.9
+          ],
+          "detection_count": 2,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.438,
+              "bbox": [
+                123.4,
+                122.1,
+                633.7,
+                610.9
+              ],
+              "area": 249420.6,
+              "center": [
+                378.6,
+                366.5
+              ]
+            },
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.396,
+              "bbox": [
+                147.8,
+                261.0,
+                453.8,
+                562.7
+              ],
+              "area": 92325.4,
+              "center": [
+                300.8,
+                411.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_06d25a37-9865-4009-a4a1-1530c37fd67d_jpg.rf.e446827ce4b3ed7d62c945546b51dd09.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_06d72405-06b8-4e5e-8c67-88748d06d4e9_jpg.rf.9cfbc110abcb51b97a1b32e9691c5d51.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        75.0,
+        119.1,
+        434.3,
+        189.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.372,
+          "total_area": 12980.2,
+          "bbox": [
+            126.3,
+            129.2,
+            383.0,
+            179.7
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.372,
+              "bbox": [
+                126.3,
+                129.2,
+                383.0,
+                179.7
+              ],
+              "area": 12980.2,
+              "center": [
+                254.7,
+                154.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_06dbea73-291d-40f8-aff6-a0c48a21f159_jpg.rf.80b431baa9e07291e2f36c51909bd726.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_07c7dbbc-a9c1-4e6a-9641-76df3d1b99fe_jpg.rf.1295b72a25f8c03f8cbde8c87b9318d8.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        290.7,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.721,
+          "total_area": 244304.3,
+          "bbox": [
+            43.0,
+            364.2,
+            707.9,
+            731.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.721,
+              "bbox": [
+                43.0,
+                364.2,
+                707.9,
+                731.6
+              ],
+              "area": 244304.3,
+              "center": [
+                375.4,
+                547.9
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_07f101ac-c661-4397-a039-f8681727ad5f_jpg.rf.4c0aaef0fb378031a9eb1e4ff497e66f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        281.5,
+        734.3,
+        535.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.368,
+          "total_area": 99999.4,
+          "bbox": [
+            73.2,
+            317.8,
+            624.1,
+            499.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.368,
+              "bbox": [
+                73.2,
+                317.8,
+                624.1,
+                499.4
+              ],
+              "area": 99999.4,
+              "center": [
+                348.7,
+                408.6
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_07f5670a-6166-4258-ad7c-f96a5ec90926_jpg.rf.ff3e1d6d4732ae3a1979a205690758aa.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        228.7,
+        268.3,
+        262.2,
+        400.1
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.457,
+          "total_area": 2247.0,
+          "bbox": [
+            233.5,
+            287.1,
+            257.4,
+            381.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.457,
+              "bbox": [
+                233.5,
+                287.1,
+                257.4,
+                381.2
+              ],
+              "area": 2247.0,
+              "center": [
+                245.5,
+                334.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_08bb9f34-4a7a-44d9-abc4-71fa657781c1_jpg.rf.36aa0fd08fc6651434ac56f4412f9b54.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_08d45b2b-9045-4fef-8409-5f54e508a714_jpg.rf.ebddc194edc46c83e7e0e62a080e4db8.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        216.0,
+        800.0,
+        594.2
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.302,
+          "total_area": 178639.1,
+          "bbox": [
+            90.3,
+            270.0,
+            751.5,
+            540.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.302,
+              "bbox": [
+                90.3,
+                270.0,
+                751.5,
+                540.2
+              ],
+              "area": 178639.1,
+              "center": [
+                420.9,
+                405.1
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_08f035a2-9b8a-456d-813a-8bc84096eda8_jpg.rf.90485c36643ba2dcd884d4756f714d0f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_08fb4a3f-aeda-4de6-84dc-fdbf5085eb85_jpg.rf.8859c653b739cf06ef79e0602eba8030.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        45.0,
+        116.4,
+        800.0,
+        301.9
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Slight scratch, Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.583,
+          "total_area": 15104.0,
+          "bbox": [
+            155.2,
+            193.6,
+            339.8,
+            275.4
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.583,
+              "bbox": [
+                155.2,
+                193.6,
+                339.8,
+                275.4
+              ],
+              "area": 15104.0,
+              "center": [
+                247.5,
+                234.5
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "slight",
+          "confidence": 0.411,
+          "total_area": 2281.2,
+          "bbox": [
+            672.2,
+            142.9,
+            706.2,
+            210.1
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.411,
+              "bbox": [
+                672.2,
+                142.9,
+                706.2,
+                210.1
+              ],
+              "area": 2281.2,
+              "center": [
+                689.2,
+                176.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_0a17037f-b4ec-4936-9d9f-99a546ce9543_jpg.rf.c1e84f8cb33097b5324bd7c88ad58b46.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        286.1,
+        224.2,
+        355.5,
+        397.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.492,
+          "total_area": 6149.5,
+          "bbox": [
+            296.0,
+            249.0,
+            345.6,
+            373.0
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.492,
+              "bbox": [
+                296.0,
+                249.0,
+                345.6,
+                373.0
+              ],
+              "area": 6149.5,
+              "center": [
+                320.8,
+                311.0
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_0a78dcea-8023-4418-94d7-95330ebeef08_JPG_jpg.rf.266f6c40d94f6241866e1a42b5bc0834.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        337.0,
+        298.1,
+        499.3,
+        550.2
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.844,
+          "total_area": 20872.7,
+          "bbox": [
+            360.2,
+            334.1,
+            476.1,
+            514.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.844,
+              "bbox": [
+                360.2,
+                334.1,
+                476.1,
+                514.2
+              ],
+              "area": 20872.7,
+              "center": [
+                418.1,
+                424.1
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_0ade5480-b10a-40f1-9bd4-b1394ce286f7_jpg.rf.314375472e8864c8e2ab23dbc4646057.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        190.6,
+        593.8,
+        608.3
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.62,
+          "total_area": 17376.8,
+          "bbox": [
+            77.8,
+            419.6,
+            212.5,
+            548.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.62,
+              "bbox": [
+                77.8,
+                419.6,
+                212.5,
+                548.6
+              ],
+              "area": 17376.8,
+              "center": [
+                145.2,
+                484.1
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.619,
+          "total_area": 77535.5,
+          "bbox": [
+            162.6,
+            250.2,
+            507.8,
+            474.8
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.619,
+              "bbox": [
+                162.6,
+                250.2,
+                507.8,
+                474.8
+              ],
+              "area": 77535.5,
+              "center": [
+                335.2,
+                362.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_0b111e45-9c2b-46bd-83c3-d7d7ba8053ab_jpg.rf.9a230ddd680ae4774e53515cf3b58dc1.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        800.0,
+        800.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_204_101_20_0c6cfa69-c7ba-4db7-9f61-f9a14a1b7af6_jpg.rf.f961bf7c967491caec54edb621658960.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        628.0,
+        495.5
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.385,
+          "total_area": 212071.9,
+          "bbox": [
+            11.7,
+            0.0,
+            525.3,
+            412.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.385,
+              "bbox": [
+                11.7,
+                0.0,
+                525.3,
+                412.9
+              ],
+              "area": 212071.9,
+              "center": [
+                268.5,
+                206.5
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_26_jpg.rf.d67b2c4835b4b9ddba5a8e0dd0d11f25.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        1365.0,
+        2048.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_29_jpg.rf.15123c1ebec816bcebe26fcbd1cac3d3.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        2048.0,
+        1367.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_44_jpg.rf.8d6da7da48945574cd86fecb9665b9ec.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        44.7,
+        0.0,
+        564.0,
+        752.0
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch (2 areas)",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.455,
+          "total_area": 69392.6,
+          "bbox": [
+            167.0,
+            328.0,
+            359.6,
+            688.3
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.455,
+              "bbox": [
+                167.0,
+                328.0,
+                359.6,
+                688.3
+              ],
+              "area": 69392.6,
+              "center": [
+                263.3,
+                508.1
+              ]
+            }
+          ]
+        },
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.338,
+          "total_area": 104319.4,
+          "bbox": [
+            131.1,
+            0.0,
+            562.9,
+            241.6
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.338,
+              "bbox": [
+                131.1,
+                0.0,
+                562.9,
+                241.6
+              ],
+              "area": 104319.4,
+              "center": [
+                347.0,
+                120.8
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 2
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_50_jpg.rf.bc15ed52e6df804d60b95cdfea37174f.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        2048.0,
+        1151.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_52_jpg.rf.57476d52d4b21f8eb96b4ee782d60a6c.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        751.4,
+        277.7,
+        1396.3,
+        948.8
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.394,
+          "total_area": 220770.1,
+          "bbox": [
+            843.6,
+            373.6,
+            1304.1,
+            852.9
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.394,
+              "bbox": [
+                843.6,
+                373.6,
+                1304.1,
+                852.9
+              ],
+              "area": 220770.1,
+              "center": [
+                1073.9,
+                613.3
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_69_jpg.rf.76ed193a1df16296d265c350daa7c0d7.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        564.0,
+        423.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_7_jpg.rf.bfd1d8d0925e3f21d65eb203eb72ad59.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        0.0,
+        0.0,
+        1996.0,
+        2048.0
+      ],
+      "overall_condition": "Clean",
+      "summary": "Car detected \u2192 Clean, No defects detected",
+      "defect_groups": [],
+      "total_defects": 0
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_93_jpg.rf.e5dd86c3063db68a116326c289c24056.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        17.1,
+        13.0,
+        414.0,
+        205.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.657,
+          "total_area": 39006.7,
+          "bbox": [
+            73.8,
+            40.6,
+            357.3,
+            178.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.657,
+              "bbox": [
+                73.8,
+                40.6,
+                357.3,
+                178.2
+              ],
+              "area": 39006.7,
+              "center": [
+                215.5,
+                109.4
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    },
+    {
+      "image_path": "..\\merged_dataset\\test\\images\\data2_97_jpg.rf.e9e88d9729552332a5bacf02037e8f93.jpg",
+      "car_detected": true,
+      "car_bbox": [
+        66.7,
+        222.7,
+        171.0,
+        303.7
+      ],
+      "overall_condition": "Poor",
+      "summary": "Car detected \u2192 Severe scratch",
+      "defect_groups": [
+        {
+          "defect_type": "scratch",
+          "severity": "severe",
+          "confidence": 0.358,
+          "total_area": 4309.4,
+          "bbox": [
+            81.6,
+            234.3,
+            156.1,
+            292.2
+          ],
+          "detection_count": 1,
+          "detections": [
+            {
+              "class_id": 2,
+              "class_name": "scratch",
+              "confidence": 0.358,
+              "bbox": [
+                81.6,
+                234.3,
+                156.1,
+                292.2
+              ],
+              "area": 4309.4,
+              "center": [
+                118.9,
+                263.2
+              ]
+            }
+          ]
+        }
+      ],
+      "total_defects": 1
+    }
+  ]
+}
