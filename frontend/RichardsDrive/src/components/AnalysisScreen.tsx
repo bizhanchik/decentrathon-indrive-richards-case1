@@ -155,9 +155,12 @@ type AnalysisResult = SingleModelResult | AllModelsAnalysisResult;
 
 export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType, onBack }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(true);
+  const [isGeneratingRepair, setIsGeneratingRepair] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [results, setResults] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [repairResult, setRepairResult] = useState<any>(null);
+  const [showRepairOption, setShowRepairOption] = useState(false);
   const [showBoundingBoxes, setShowBoundingBoxes] = useState(true);
   const [showMainModelBoxes, setShowMainModelBoxes] = useState(false);
   const [showModel2Boxes, setShowModel2Boxes] = useState(false);
@@ -170,15 +173,16 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
     try {
       setIsAnalyzing(true);
       setError(null);
+      setShowRepairOption(false);
       
       const formData = new FormData();
       formData.append('file', imageFile);
       formData.append('model_type', modelType);
       
-      console.log(`Analyzing with model type: ${modelType}`);
+      console.log(`Fast analyzing with model type: ${modelType}`);
       
-      // Use analyze-all endpoint for comprehensive results from all 4 models
-      const response = await fetch('http://localhost:8000/analyze-all', {
+      // Use analyze-fast endpoint for quick detection without image generation
+      const response = await fetch('http://localhost:8000/analyze-fast', {
         method: 'POST',
         body: formData,
       });
@@ -192,7 +196,7 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
       
       // Transform backend response to match frontend expectations
       const transformedResult = {
-        gemini_analysis: analysisResult.gemini_analysis || null,
+        gemini_analysis: null, // No Gemini analysis in fast mode
         main_analysis: analysisResult.main_model?.analysis || null,
         model2_analysis: analysisResult.model2?.analysis || null,
         model3_analysis: analysisResult.model3?.analysis || null,
@@ -208,10 +212,16 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
         }
       };
       
-      console.log('Backend response:', analysisResult);
+      console.log('Fast detection response:', analysisResult);
       console.log('Transformed result:', transformedResult);
       
       setResults(transformedResult);
+      
+      // Check if damage is detected to show repair option
+      const damageDetected = analysisResult.combined_summary?.ensemble_details?.damage_detected || false;
+      if (damageDetected) {
+        setShowRepairOption(true);
+      }
     } catch (err) {
       console.error('Analysis error:', err);
       setError(err instanceof Error ? err.message : 'Analysis failed');
@@ -237,6 +247,57 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
       });
     } finally {
       setIsAnalyzing(false);
+    }
+  };
+
+  const generateAIRepair = async () => {
+    try {
+      setIsGeneratingRepair(true);
+      setError(null);
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      console.log('Generating AI repair...');
+      
+      const response = await fetch('http://localhost:8000/generate-repair', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'AI repair generation failed');
+      }
+      
+      const repairResult = await response.json();
+      
+      console.log('AI repair response:', repairResult);
+      
+      setRepairResult(repairResult);
+      
+      // Update the results to include Gemini analysis
+      if (results && 'combined_summary' in results) {
+        const updatedResults = {
+          ...results,
+          gemini_analysis: {
+            damage_detected: repairResult.gemini_analysis?.damage_detected || false,
+            repaired_image: repairResult.gemini_analysis?.repaired_image || null,
+            model_info: repairResult.gemini_analysis?.model_info || {
+              type: 'nano_banana',
+              name: 'Nano Banana AI Repair',
+              description: 'AI-powered image repair'
+            }
+          }
+        };
+        setResults(updatedResults);
+      }
+      
+    } catch (err) {
+      console.error('AI repair generation error:', err);
+      setError(err instanceof Error ? err.message : 'AI repair generation failed');
+    } finally {
+      setIsGeneratingRepair(false);
     }
   };
 
@@ -447,7 +508,7 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
               
               {/* Analysis Loader Overlay */}
               {isAnalyzing && (
-                <div className="absolute inset-0 bg-black/20">
+                <div className="absolute inset-0 bg-black/20 z-10">
                   <Loader className="w-full h-full" />
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="bg-black/80 rounded-lg p-4 backdrop-blur-sm">
@@ -456,6 +517,24 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
                         <div 
                           className="bg-[#c1f21d] h-2 rounded-full transition-all duration-300"
                           style={{ width: '100%', animation: 'progress 3s ease-in-out' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* AI Repair Generation Loader Overlay */}
+              {isGeneratingRepair && (
+                <div className="absolute inset-0 bg-black/20 z-10">
+                  <Loader className="w-full h-full" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="bg-black/80 rounded-lg p-4 backdrop-blur-sm">
+                      <p className="text-[#c1f21d] font-semibold mb-2">Generating AI Repair...</p>
+                      <div className="w-full bg-gray-700 rounded-full h-2">
+                        <div 
+                          className="bg-[#c1f21d] h-2 rounded-full transition-all duration-300"
+                          style={{ width: '100%', animation: 'progress 2s ease-in-out' }}
                         />
                       </div>
                     </div>
@@ -1413,6 +1492,31 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
                       )}
                     </>
                   )}
+                  {/* AI Repair Generation Button */}
+                  {showRepairOption && !results.gemini_analysis?.repaired_image && (
+                    <Card className="bg-[#2c2c2c] border-black animate-fade-in">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="flex items-center text-white">
+                          <Sparkles className="w-5 h-5 mr-2 text-[#c1f21d]" />
+                          AI Repair Generation
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-gray-400 text-sm mb-4">
+                          Damage detected! Generate an AI preview of how your car would look after repairs.
+                        </p>
+                        <Button
+                          onClick={generateAIRepair}
+                          disabled={isGeneratingRepair}
+                          className="w-full bg-[#c1f21d] text-black hover:bg-[#a8d119] disabled:opacity-50"
+                        >
+                          <Sparkles className="w-4 h-4 mr-2" />
+                          {isGeneratingRepair ? 'Generating AI Repair...' : 'Generate AI Repair Preview'}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  )}
+
                   {/* AI-Repaired Preview */}
                       {results.gemini_analysis?.damage_detected && results.gemini_analysis?.repaired_image && (
                         <Card className="bg-[#2c2c2c] border-black animate-fade-in">
@@ -1449,42 +1553,7 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
                           </CardContent>
                         </Card>
                       )}
-                  {/* AI-Repaired Preview */}
-                  {'ai_analysis' in results && results.ai_analysis?.damage_detected && results.ai_analysis?.ai_repaired_image && (
-                    <Card className="bg-[#2c2c2c] border-black animate-fade-in">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="flex items-center text-white">
-                          <Sparkles className="w-5 h-5 mr-2 text-[#c1f21d]" />
-                          AI-Repaired Preview
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-gray-400 text-sm mb-4">
-                          Our AI has generated a preview of how your car would look after repairs:
-                        </p>
-                        <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a] border border-[#c1f21d]/20">
-                          <img
-                            src={`data:image/jpeg;base64,${results.ai_analysis.ai_repaired_image}`}
-                            alt="AI-repaired vehicle preview"
-                            className="w-full h-auto transition-all duration-500 hover:scale-105"
-                          />
-                          <div className="absolute top-3 right-3">
-                            <div className="bg-[#c1f21d]/90 text-[#141414] px-3 py-1 rounded-full text-xs font-semibold">
-                              AI Generated
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-4 p-3 bg-[#1a1a1a] rounded-lg border border-[#c1f21d]/20">
-                          <p className="text-[#c1f21d] text-sm font-medium mb-1">
-                            ✨ Preview Only
-                          </p>
-                          <p className="text-gray-400 text-xs">
-                            This is an AI-generated visualization of potential repairs. Actual results may vary.
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
+
 
                   {/* Action Buttons */}
                   <div className="flex space-x-4 pt-4">

@@ -975,21 +975,20 @@ def apply_weighted_boxes_fusion(model_outputs: Dict[str, List], image_width: int
     
     return []
 
-@app.post("/analyze-all")
-async def analyze_image_all_models(file: UploadFile = File(...)):
-    """Analyze uploaded car image using Gemini + 4 models for comprehensive detection
+@app.post("/analyze-fast")
+async def analyze_image_fast_detection(file: UploadFile = File(...)):
+    """Fast detection-only analysis using 4 models without AI image generation
     
     Process Flow:
-    1. Gemini analyzes image for damage detection (returns 0 or 1)
-    2. If damage detected (1), Nano Banana generates repaired image
-    3. All 4 models (main, model2, model3, model4) analyze the image
-    4. Combined results returned including Gemini analysis and repaired image
+    1. All 4 models (main, model2, model3, model4) analyze the image
+    2. Combined results returned immediately without Gemini image generation
+    3. Optimized for speed - detection results load first
     
     Args:
         file: The uploaded car image
     
     Returns:
-        Combined analysis from Gemini + all 4 models with optional repaired image
+        Combined analysis from all 4 models without AI image generation
     """
     global inference_engine, defect_inference_engine, model3_inference_engine, model4_inference_engine
     
@@ -1019,9 +1018,206 @@ async def analyze_image_all_models(file: UploadFile = File(...)):
             img = cv2.imread(temp_file_path)
             img_height, img_width = img.shape[:2]
             
-            # Step 1: Use Gemini for initial damage detection
-            logger.info(f"Running Gemini damage detection on: {file.filename}")
-            gemini_damage_detected, repaired_image = await analyze_and_repair_with_gemini(temp_file_path)
+            # Initialize engines if needed
+            if inference_engine is None:
+                initialize_inference_engine(model_type='s')
+            if defect_inference_engine is None:
+                initialize_defect_inference_engine()
+            if model3_inference_engine is None:
+                initialize_model3_inference_engine()
+            if model4_inference_engine is None:
+                initialize_model4_inference_engine()
+            
+            # Run analysis with main model
+            logger.info(f"Running main defect analysis on: {file.filename}")
+            main_analysis = None
+            if inference_engine is not None:
+                main_analysis = inference_engine.predict_image(
+                    temp_file_path,
+                    conf_threshold=0.55,
+                    iou_threshold=0.5
+                )
+            
+            # Run analysis with model2
+            logger.info(f"Running model2 analysis on: {file.filename}")
+            model2_analysis = None
+            if defect_inference_engine is not None:
+                model2_result = defect_inference_engine.predict_single(temp_file_path)
+                model2_analysis = {
+                    'detections': model2_result.get('detections', []),
+                    'num_detections': model2_result.get('num_detections', 0),
+                    'inference_time': model2_result.get('inference_time_ms', 0)
+                }
+            
+            # Run analysis with model3
+            logger.info(f"Running model3 analysis on: {file.filename}")
+            model3_analysis = None
+            if model3_inference_engine is not None:
+                model3_result = model3_inference_engine.predict_single(temp_file_path)
+                model3_analysis = {
+                    'detections': model3_result.get('detections', []),
+                    'num_detections': model3_result.get('num_detections', 0),
+                    'inference_time': model3_result.get('inference_time_ms', 0)
+                }
+                
+                # Apply conflict resolution to Model 3 before sending to frontend
+                if ensemble_engine and model3_analysis:
+                    resolved_model3_analysis = ensemble_engine.resolve_model3_conflicts(model3_analysis)
+                    if resolved_model3_analysis and resolved_model3_analysis.get('conflict_resolved'):
+                        logger.info(f"Model 3 conflicts resolved: {resolved_model3_analysis['resolved_detection_count']} detections kept out of {resolved_model3_analysis['original_detection_count']} original")
+                        model3_analysis = resolved_model3_analysis
+            
+            # Run analysis with model4
+            logger.info(f"Running model4 analysis on: {file.filename}")
+            model4_analysis = None
+            if model4_inference_engine is not None:
+                model4_result = model4_inference_engine.predict_single(temp_file_path)
+                model4_analysis = {
+                    'detections': model4_result.get('detections', []),
+                    'num_detections': model4_result.get('num_detections', 0),
+                    'inference_time': model4_result.get('inference_time_ms', 0)
+                }
+            
+            # Check ensemble logic first for Model 3 override
+            ensemble_override = None
+            if ensemble_engine is not None:
+                try:
+                    ensemble_result = ensemble_engine.generate_ensemble_prediction(
+                        main_analysis, model2_analysis, model3_analysis, model4_analysis
+                    )
+                    # If Model 3 override is applied, skip WBF
+                    if ensemble_result.get('override_applied') and ensemble_result.get('override_model') == 'model3':
+                        logger.info(f"Model 3 override detected - skipping WBF. Prediction: {ensemble_result['prediction']}")
+                        ensemble_override = ensemble_result
+                        unified_boxes = []  # No WBF needed
+                    else:
+                        logger.info("No Model 3 override - proceeding with WBF")
+                except Exception as e:
+                    logger.error(f"Error in ensemble logic check: {e}")
+            
+            # Only run WBF if no Model 3 override
+            if ensemble_override is None:
+                # Extract individual boxes from all models
+                individual_boxes = extract_individual_boxes(main_analysis, model2_analysis, model3_analysis, model4_analysis, img_width, img_height)
+                
+                # Apply Weighted Boxes Fusion
+                unified_boxes = apply_weighted_boxes_fusion(individual_boxes, img_width, img_height)
+            else:
+                individual_boxes = {}
+            
+            # Combine results from all models (fast mode - no Gemini)
+            combined_result = {
+                'main_model': {
+                    'available': main_analysis is not None,
+                    'analysis': convert_analysis_to_frontend_format(main_analysis, img_width, img_height) if main_analysis else None,
+                    'model_info': {
+                        'type': 's',
+                        'name': 'YOLOv8s - Multi-class Defect Detection',
+                        'classes': inference_engine.class_names if inference_engine else []
+                    }
+                },
+                'model2': {
+                    'available': model2_analysis is not None,
+                    'analysis': convert_defect_analysis_to_frontend_format(model2_analysis, img_width, img_height) if model2_analysis else None,
+                    'model_info': {
+                        'type': 'defect_detection_model2',
+                        'name': 'Model2 - Specialized Defect Detection',
+                        'classes': ['crack', 'dent', 'glass shatter', 'lamp broken', 'scratch', 'tire flat']
+                    }
+                },
+                'model3': {
+                    'available': model3_analysis is not None,
+                    'analysis': convert_defect_analysis_to_frontend_format(model3_analysis, img_width, img_height) if model3_analysis else None,
+                    'model_info': {
+                        'type': 'defect_detection_model3',
+                        'name': 'Model3 - Specialized Defect Detection',
+                        'classes': ['crack', 'dent', 'glass shatter', 'lamp broken', 'scratch', 'tire flat']
+                    }
+                },
+                'model4': {
+                    'available': model4_analysis is not None,
+                    'analysis': convert_defect_analysis_to_frontend_format(model4_analysis, img_width, img_height) if model4_analysis else None,
+                    'model_info': {
+                        'type': 'defect_detection_model4',
+                        'name': 'Model4 - Advanced Defect Detection',
+                        'classes': ['crack', 'dent', 'glass shatter', 'lamp broken', 'scratch', 'tire flat']
+                    }
+                },
+                'individual_boxes': individual_boxes,
+                'unified_boxes': unified_boxes,
+                'fast_mode': True
+            }
+            
+            # Generate combined summary (pass ensemble override result to avoid duplicate processing)
+            combined_summary = generate_all_models_summary(main_analysis, model2_analysis, model3_analysis, model4_analysis, ensemble_override)
+            combined_result['combined_summary'] = combined_summary
+            
+            logger.info(f"Fast detection analysis completed for {file.filename}")
+            return JSONResponse(content=combined_result)
+            
+        finally:
+            # Clean up temporary file
+            os.unlink(temp_file_path)
+            
+    except Exception as e:
+        logger.error(f"Error in fast detection analysis {file.filename}: {e}")
+        raise HTTPException(status_code=500, detail=f"Error analyzing image: {str(e)}")
+
+
+@app.post("/analyze-all")
+async def analyze_image_all_models(file: UploadFile = File(...), skip_image_generation: bool = Query(False, description="If true, skip AI image generation for faster results")):
+    """Analyze uploaded car image using Gemini + 4 models for comprehensive detection
+    
+    Process Flow:
+    1. All 4 models (main, model2, model3, model4) analyze the image
+    2. Optionally: Gemini analyzes image for damage detection (returns 0 or 1)
+    3. Optionally: If damage detected (1), Nano Banana generates repaired image
+    4. Combined results returned with optional Gemini analysis and repaired image
+    
+    Args:
+        file: The uploaded car image
+        skip_image_generation: If true, skip Gemini image generation for faster results
+    
+    Returns:
+        Combined analysis from all 4 models with optional Gemini analysis and repaired image
+    """
+    global inference_engine, defect_inference_engine, model3_inference_engine, model4_inference_engine
+    
+    # Validate file type
+    if not file.content_type or not file.content_type.startswith('image/'):
+        raise HTTPException(status_code=400, detail="File must be an image")
+    
+    # Validate file size (10MB limit)
+    max_size = 10 * 1024 * 1024  # 10MB
+    file_content = await file.read()
+    if len(file_content) > max_size:
+        raise HTTPException(status_code=400, detail="File size exceeds 10MB limit")
+    
+    try:
+        # Validate image format
+        image = Image.open(io.BytesIO(file_content))
+        image.verify()  # Verify it's a valid image
+        
+        # Reset file pointer and save to temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_file:
+            temp_file.write(file_content)
+            temp_file_path = temp_file.name
+        
+        try:
+            # Get image dimensions
+            import cv2
+            img = cv2.imread(temp_file_path)
+            img_height, img_width = img.shape[:2]
+            
+            # Step 1: Conditionally use Gemini for initial damage detection
+            gemini_damage_detected = 0
+            repaired_image = None
+            
+            if not skip_image_generation:
+                logger.info(f"Running Gemini damage detection on: {file.filename}")
+                gemini_damage_detected, repaired_image = await analyze_and_repair_with_gemini(temp_file_path)
+            else:
+                logger.info(f"Skipping Gemini image generation for faster results: {file.filename}")
             
             # Initialize engines if needed
             if inference_engine is None:
@@ -1188,6 +1384,80 @@ async def analyze_image_all_models(file: UploadFile = File(...)):
     except Exception as e:
         logger.error(f"Error in all models analysis for {file.filename}: {e}")
         raise HTTPException(status_code=500, detail=f"Error analyzing image: {str(e)}")
+
+@app.post("/generate-repair")
+async def generate_ai_repair(file: UploadFile = File(...)):
+    """Generate AI-repaired image using Gemini and Nano Banana
+    
+    This endpoint is separate from detection and focuses only on AI image generation.
+    Can be called after detection results are available to avoid blocking detection loading.
+    
+    Process Flow:
+    1. Gemini analyzes image for damage detection (returns 0 or 1)
+    2. If damage detected (1), Nano Banana generates repaired image
+    3. Returns repair results without running detection models
+    
+    Args:
+        file: The uploaded car image
+    
+    Returns:
+        AI repair analysis with generated repaired image if damage detected
+    """
+    # Validate file type
+    if not file.content_type or not file.content_type.startswith('image/'):
+        raise HTTPException(status_code=400, detail="File must be an image")
+    
+    # Validate file size (10MB limit)
+    max_size = 10 * 1024 * 1024  # 10MB
+    file_content = await file.read()
+    if len(file_content) > max_size:
+        raise HTTPException(status_code=400, detail="File size exceeds 10MB limit")
+    
+    try:
+        # Validate image format
+        image = Image.open(io.BytesIO(file_content))
+        image.verify()  # Verify it's a valid image
+        
+        # Reset file pointer and save to temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_file:
+            temp_file.write(file_content)
+            temp_file_path = temp_file.name
+        
+        try:
+            # Use Gemini for damage detection and repair
+            logger.info(f"Running Gemini damage detection and repair on: {file.filename}")
+            gemini_damage_detected, repaired_image = await analyze_and_repair_with_gemini(temp_file_path)
+            
+            # Prepare response
+            repair_result = {
+                'gemini_analysis': {
+                    'damage_detected': gemini_damage_detected == 1,
+                    'repaired_image': repaired_image if gemini_damage_detected == 1 else None,
+                    'model_info': {
+                        'type': 'gemini',
+                        'name': 'Gemini - AI Damage Detection & Nano Banana Repair',
+                        'description': 'AI-powered damage detection with repair generation'
+                    }
+                },
+                'message': 'AI repair generation completed'
+            }
+            
+            # Log results
+            if gemini_damage_detected == 1:
+                logger.info(f"Gemini detected damage for {file.filename} - repaired image {'generated' if repaired_image else 'failed to generate'}")
+            else:
+                logger.info(f"Gemini detected no damage for {file.filename} - no repair needed")
+            
+            return JSONResponse(content=repair_result)
+            
+        finally:
+            # Clean up temporary file
+            os.unlink(temp_file_path)
+            
+    except Exception as e:
+        logger.error(f"Error in AI repair generation for {file.filename}: {e}")
+        raise HTTPException(status_code=500, detail=f"Error generating AI repair: {str(e)}")
+
 
 @app.post("/analyze-dual")
 async def analyze_image_dual(file: UploadFile = File(...)):
