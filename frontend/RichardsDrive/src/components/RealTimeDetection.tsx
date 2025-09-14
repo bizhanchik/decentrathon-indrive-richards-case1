@@ -4,8 +4,6 @@ import { cn } from '@/lib/utils';
 
 interface DetectionResult {
   damage_detected: boolean;
-  models_agreement?: number;
-  total_models?: number;
   total_detections?: number;
   confidence: 'low' | 'medium' | 'high';
   confidence_score?: number;
@@ -33,11 +31,11 @@ interface DetectionResult {
     damaged: boolean;
     damageLevel: 'none' | 'minor' | 'moderate' | 'severe';
   };
-  models_results?: {
-    model1_detections: number;
-    model2_detections: number;
-    model3_detections: number;
-    model4_detections: number;
+  ensemble_details?: {
+    prediction: string;
+    reasoning: string;
+    override_applied: boolean;
+    ensemble_score: number;
   };
   // Legacy fields for backward compatibility
   yolo_detections?: number;
@@ -203,9 +201,10 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
     if (!result) return 'text-gray-400';
     if (result.error) return 'text-red-400';
     if (result.damage_detected) {
-      const agreement = result.models_agreement || 0;
-      if (agreement >= 3) return 'text-red-500'; // High confidence damage
-      return 'text-orange-400'; // Medium confidence damage
+      const confidence = result.confidence_score || 0;
+      if (confidence >= 0.8) return 'text-red-500'; // High confidence damage
+      if (confidence >= 0.6) return 'text-orange-400'; // Medium confidence damage
+      return 'text-yellow-400'; // Low confidence damage
     }
     return 'text-green-400';
   };
@@ -255,7 +254,7 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
 
       {/* Main Content */}
       <div className="pt-20 p-4 sm:p-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {/* Camera View */}
           <div className="relative mb-6">
             {/* Bounding Box Toggle */}
@@ -276,7 +275,7 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
               </div>
             )}
             
-            <div className="aspect-video bg-black rounded-lg overflow-hidden relative">
+            <div className="aspect-video bg-black rounded-xl overflow-hidden relative shadow-2xl">
               <video
                 ref={videoRef}
                 autoPlay
@@ -360,33 +359,8 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
                       <span className="font-medium">{getStatusText(currentResult)}</span>
                     </div>
                     
-                    {/* Individual Model Results */}
-                    {currentResult && currentResult.models_results && (
-                      <div className="mt-3 grid grid-cols-4 gap-2 text-xs">
-                        <div className="text-center">
-                          <div className="text-blue-400 font-medium">Model 1</div>
-                          <div className="text-gray-300">{currentResult.models_results.model1_detections} det.</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-green-400 font-medium">Model 2</div>
-                          <div className="text-gray-300">{currentResult.models_results.model2_detections} det.</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-purple-400 font-medium">Model 3</div>
-                          <div className="text-gray-300">{currentResult.models_results.model3_detections} det.</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-orange-400 font-medium">Model 4</div>
-                          <div className="text-gray-300">{currentResult.models_results.model4_detections} det.</div>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {totalAnalyzed > 0 && (
-                      <div className="mt-2 text-sm text-gray-300">
-                        Session: {damageCount} damage detected in {totalAnalyzed} frames analyzed
-                      </div>
-                    )}
+
+
                   </div>
                 </div>
               </div>
@@ -427,39 +401,7 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
             </div>
           )}
 
-          {/* Session Summary */}
-          {sessionResults.length > 0 && (
-            <div className="bg-[#1a1a1a] rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-4">Session Summary</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-[#c1f21d]">{totalAnalyzed}</div>
-                  <div className="text-sm text-gray-400">Frames Analyzed</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-red-400">{damageCount}</div>
-                  <div className="text-sm text-gray-400">Damage Detected</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-400">{totalAnalyzed - damageCount}</div>
-                  <div className="text-sm text-gray-400">Clean Frames</div>
-                </div>
-              </div>
-              
-              {damageCount > 0 && (
-                <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
-                  <div className="flex items-center space-x-2 text-red-400 mb-2">
-                    <AlertTriangle className="w-5 h-5" />
-                    <span className="font-medium">Damage Found</span>
-                  </div>
-                  <p className="text-red-300">
-                    Damage was detected in {damageCount} frame{damageCount !== 1 ? 's' : ''} during this session. 
-                    Consider having your vehicle inspected by a professional.
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
+
         </div>
       </div>
     </div>

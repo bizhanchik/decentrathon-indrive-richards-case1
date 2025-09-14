@@ -1945,7 +1945,8 @@ async def analyze_frame_for_damage_single_model(image_data: bytes, real_time_det
 
 async def analyze_frame_with_all_models(image_data: bytes) -> Dict[str, Any]:
     """
-    Analyze a single video frame for car damage detection using all 4 models simultaneously.
+    Analyze a single video frame for car damage detection using all 4 models simultaneously
+    with proper ensemble logic integration.
     
     Args:
         image_data: Raw image bytes
@@ -1954,152 +1955,246 @@ async def analyze_frame_with_all_models(image_data: bytes) -> Dict[str, Any]:
         Aggregated results from all 4 models with ensemble decision
     """
     import asyncio
+    import uuid
     
+    temp_path = None
     try:
-        # Save frame to temporary file
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_file:
-            temp_file.write(image_data)
-            temp_path = temp_file.name
+        # Create unique temporary file to avoid conflicts
+        temp_filename = f"realtime_frame_{uuid.uuid4().hex}.jpg"
+        temp_path = os.path.join(tempfile.gettempdir(), temp_filename)
         
+        # Write image data to temporary file with proper error handling
         try:
-            # Check if all models are initialized
-            if not all([inference_engine, defect_inference_engine, model3_inference_engine, model4_inference_engine]):
-                return {"error": "Not all inference engines are initialized"}
-            
-            # Get image dimensions
+            with open(temp_path, 'wb') as temp_file:
+                temp_file.write(image_data)
+        except Exception as e:
+            logger.error(f"Failed to write temporary file: {e}")
+            return {"error": f"Failed to save frame: {str(e)}"}
+        
+        # Check if all models are initialized
+        if not all([inference_engine, defect_inference_engine, model3_inference_engine, model4_inference_engine]):
+            return {"error": "Not all inference engines are initialized"}
+        
+        # Get image dimensions
+        try:
             img = Image.open(temp_path)
             img_width, img_height = img.size
-            
-            # Define async functions for each model
-            async def run_model1():
-                try:
-                    analysis = inference_engine.predict_image(temp_path)
-                    return convert_analysis_to_frontend_format(analysis, img_width, img_height)
-                except Exception as e:
-                    logger.error(f"Model 1 error: {e}")
-                    return {"error": str(e)}
-            
-            async def run_model2():
-                try:
-                    analysis = defect_inference_engine.predict_image(temp_path)
-                    return convert_analysis_to_frontend_format(analysis, img_width, img_height)
-                except Exception as e:
-                    logger.error(f"Model 2 error: {e}")
-                    return {"error": str(e)}
-            
-            async def run_model3():
-                try:
-                    analysis = model3_inference_engine.predict_image(temp_path)
-                    return convert_analysis_to_frontend_format(analysis, img_width, img_height)
-                except Exception as e:
-                    logger.error(f"Model 3 error: {e}")
-                    return {"error": str(e)}
-            
-            async def run_model4():
-                try:
-                    analysis = model4_inference_engine.predict_image(temp_path)
-                    return convert_analysis_to_frontend_format(analysis, img_width, img_height)
-                except Exception as e:
-                    logger.error(f"Model 4 error: {e}")
-                    return {"error": str(e)}
-            
-            # Run all models in parallel
-            model1_result, model2_result, model3_result, model4_result = await asyncio.gather(
-                run_model1(), run_model2(), run_model3(), run_model4(),
-                return_exceptions=True
-            )
-            
-            # Aggregate results
-            models_results = {
-                "model1": model1_result,
-                "model2": model2_result,
-                "model3": model3_result,
-                "model4": model4_result
+        except Exception as e:
+            logger.error(f"Failed to open image: {e}")
+            return {"error": f"Failed to process frame: {str(e)}"}
+        
+        # Define async functions for each model
+        async def run_model1():
+            try:
+                analysis = inference_engine.predict_image(temp_path)
+                return analysis
+            except Exception as e:
+                logger.error(f"Model 1 error: {e}")
+                return None
+        
+        async def run_model2():
+            try:
+                analysis = defect_inference_engine.predict_image(temp_path)
+                return analysis
+            except Exception as e:
+                logger.error(f"Model 2 error: {e}")
+                return None
+        
+        async def run_model3():
+            try:
+                analysis = model3_inference_engine.predict_image(temp_path)
+                return analysis
+            except Exception as e:
+                logger.error(f"Model 3 error: {e}")
+                return None
+        
+        async def run_model4():
+            try:
+                analysis = model4_inference_engine.predict_image(temp_path)
+                return analysis
+            except Exception as e:
+                logger.error(f"Model 4 error: {e}")
+                return None
+        
+        # Run all models in parallel
+        model1_analysis, model2_analysis, model3_analysis, model4_analysis = await asyncio.gather(
+            run_model1(), run_model2(), run_model3(), run_model4(),
+            return_exceptions=True
+        )
+        
+        # Convert model analyses to the format expected by ensemble logic
+        model2_formatted = None
+        model3_formatted = None
+        model4_formatted = None
+        
+        if model2_analysis and hasattr(model2_analysis, 'defect_groups'):
+            model2_formatted = {
+                'detections': [{
+                    'class': group.defect_type,
+                    'confidence': float(group.confidence),
+                    'bbox': group.bbox
+                } for group in model2_analysis.defect_groups]
             }
-            
-            # Count damage detections from each model
-            damage_votes = 0
-            total_detections = 0
-            confidence_scores = []
-            all_areas = []
-            
-            for model_name, result in models_results.items():
-                if isinstance(result, dict) and "error" not in result:
-                    areas = result.get('heatmap', {}).get('areas', [])
-                    if len(areas) > 0:
-                        damage_votes += 1
-                        total_detections += len(areas)
-                        # Add areas with model source
-                        for area in areas:
-                            area['source_model'] = model_name
-                            all_areas.append(area)
-                        
-                        # Calculate average confidence for this model
-                        model_confidences = [area.get('confidence', 0.5) for area in areas]
-                        if model_confidences:
-                            confidence_scores.append(sum(model_confidences) / len(model_confidences))
-            
-            # Ensemble decision logic
-            # Damage is detected if at least 2 out of 4 models detect it
-            damage_detected = damage_votes >= 2
-            
-            # Calculate overall confidence
-            if confidence_scores:
-                avg_confidence = sum(confidence_scores) / len(confidence_scores)
-                if damage_votes >= 3:
+        
+        if model3_analysis and hasattr(model3_analysis, 'defect_groups'):
+            model3_formatted = {
+                'detections': [{
+                    'class': group.defect_type,
+                    'confidence': float(group.confidence),
+                    'bbox': group.bbox
+                } for group in model3_analysis.defect_groups]
+            }
+        
+        if model4_analysis and hasattr(model4_analysis, 'defect_groups'):
+            model4_formatted = {
+                'detections': [{
+                    'class': group.defect_type,
+                    'confidence': float(group.confidence),
+                    'bbox': group.bbox
+                } for group in model4_analysis.defect_groups]
+            }
+        
+        # Use ensemble logic for proper decision making
+        global ensemble_engine
+        if ensemble_engine:
+            try:
+                ensemble_result = ensemble_engine.combine_predictions(
+                    main_analysis=model1_analysis,
+                    model2_analysis=model2_formatted,
+                    model3_analysis=model3_formatted,
+                    model4_analysis=model4_formatted
+                )
+                
+                # Convert ensemble result to real-time format
+                damage_detected = ensemble_result.get('damage_detected', False)
+                confidence_score = ensemble_result.get('confidence', 0.0)
+                
+                # Map confidence to level
+                if confidence_score >= 0.8:
                     confidence_level = "high"
-                elif damage_votes >= 2:
+                elif confidence_score >= 0.6:
                     confidence_level = "medium"
                 else:
                     confidence_level = "low"
-            else:
-                avg_confidence = 0.0
-                confidence_level = "low"
-            
-            # Determine damage level based on total detections and votes
-            if damage_detected:
-                if damage_votes >= 3 and total_detections >= 5:
-                    damage_level = "severe"
-                elif damage_votes >= 3 or total_detections >= 3:
-                    damage_level = "moderate"
-                else:
-                    damage_level = "minor"
-            else:
-                damage_level = "none"
-            
-            # Create aggregated result
-            result = {
-                "damage_detected": damage_detected,
-                "models_agreement": damage_votes,
-                "total_models": 4,
-                "total_detections": total_detections,
-                "confidence": confidence_level,
-                "confidence_score": avg_confidence,
-                "timestamp": int(time.time() * 1000),
-                "mode": "multi_model_realtime",
-                "heatmap": {"areas": all_areas},
-                "integrity": {
-                    "damaged": damage_detected,
-                    "damageLevel": damage_level
-                },
-                "models_results": {
-                    "model1_detections": len(model1_result.get('heatmap', {}).get('areas', [])) if isinstance(model1_result, dict) and "error" not in model1_result else 0,
-                    "model2_detections": len(model2_result.get('heatmap', {}).get('areas', [])) if isinstance(model2_result, dict) and "error" not in model2_result else 0,
-                    "model3_detections": len(model3_result.get('heatmap', {}).get('areas', [])) if isinstance(model3_result, dict) and "error" not in model3_result else 0,
-                    "model4_detections": len(model4_result.get('heatmap', {}).get('areas', [])) if isinstance(model4_result, dict) and "error" not in model4_result else 0
-                }
-            }
-            
-            return result
-            
-        finally:
-            # Clean up temporary file
-            if os.path.exists(temp_path):
-                os.unlink(temp_path)
                 
+                # Extract unified detections for heatmap
+                all_areas = []
+                unified_detections = ensemble_result.get('unified_detections', [])
+                for detection in unified_detections:
+                    bbox = detection.get('bbox', [])
+                    if len(bbox) >= 4:
+                        all_areas.append({
+                            'x': bbox[0],
+                            'y': bbox[1],
+                            'severity': detection.get('severity', 'medium'),
+                            'description': f"{detection.get('class_name', 'damage')} (confidence: {detection.get('confidence', 0.0):.2f})",
+                            'bbox': {
+                                'x1': bbox[0],
+                                'y1': bbox[1],
+                                'x2': bbox[2],
+                                'y2': bbox[3]
+                            },
+                            'defect_type': detection.get('class_name', 'damage'),
+                            'confidence': detection.get('confidence', 0.0),
+                            'source_model': ', '.join(detection.get('source_models', []))
+                        })
+                
+                # Determine damage level
+                severity_score = ensemble_result.get('severity_score', 0.0)
+                if damage_detected:
+                    if severity_score >= 0.8:
+                        damage_level = "severe"
+                    elif severity_score >= 0.5:
+                        damage_level = "moderate"
+                    else:
+                        damage_level = "minor"
+                else:
+                    damage_level = "none"
+                
+                result = {
+                    "damage_detected": damage_detected,
+                    "total_detections": len(unified_detections),
+                    "confidence": confidence_level,
+                    "confidence_score": confidence_score,
+                    "timestamp": int(time.time() * 1000),
+                    "mode": "wbf_unified",
+                    "heatmap": {"areas": all_areas},
+                    "integrity": {
+                        "damaged": damage_detected,
+                        "damageLevel": damage_level
+                    },
+                    "ensemble_details": {
+                        "prediction": ensemble_result.get('prediction', 'unknown'),
+                        "reasoning": ensemble_result.get('reasoning', 'WBF Unified Detection'),
+                        "override_applied": ensemble_result.get('override_applied', False),
+                        "ensemble_score": ensemble_result.get('ensemble_score', 0)
+                    }
+                }
+                
+                return result
+                
+            except Exception as e:
+                logger.error(f"Ensemble logic error: {e}")
+                # Fall back to simple aggregation if ensemble fails
+        
+        # Fallback: Simple aggregation if ensemble is not available
+        logger.warning("Using fallback aggregation - ensemble engine not available")
+        
+        # Convert analyses to frontend format for fallback
+        model_results = []
+        for analysis in [model1_analysis, model2_analysis, model3_analysis, model4_analysis]:
+            if analysis and hasattr(analysis, 'defect_groups'):
+                result = convert_analysis_to_frontend_format(analysis, img_width, img_height)
+                model_results.append(result)
+        
+        # Simple voting logic as fallback
+        damage_votes = sum(1 for result in model_results if result.get('heatmap', {}).get('areas', []))
+        total_detections = sum(len(result.get('heatmap', {}).get('areas', [])) for result in model_results)
+        
+        all_areas = []
+        for i, result in enumerate(model_results):
+            areas = result.get('heatmap', {}).get('areas', [])
+            for area in areas:
+                area['source_model'] = 'unified'
+                all_areas.append(area)
+        
+        damage_detected = damage_votes >= 2
+        confidence_level = "high" if damage_votes >= 3 else "medium" if damage_votes >= 2 else "low"
+        avg_confidence = 0.7 if damage_detected else 0.3
+        
+        result = {
+            "damage_detected": damage_detected,
+            "total_detections": total_detections,
+            "confidence": confidence_level,
+            "confidence_score": avg_confidence,
+            "timestamp": int(time.time() * 1000),
+            "mode": "wbf_fallback",
+            "heatmap": {"areas": all_areas},
+            "integrity": {
+                "damaged": damage_detected,
+                "damageLevel": "moderate" if damage_detected else "none"
+            }
+        }
+        
+        return result
+        
     except Exception as e:
         logger.error(f"Error analyzing frame with all models: {e}")
         return {"error": str(e)}
+    
+    finally:
+        # Clean up temporary file with better error handling
+        if temp_path and os.path.exists(temp_path):
+            try:
+                os.unlink(temp_path)
+            except Exception as e:
+                logger.warning(f"Failed to delete temporary file {temp_path}: {e}")
+                # Try alternative cleanup method
+                try:
+                    time.sleep(0.1)  # Brief delay
+                    os.remove(temp_path)
+                except Exception as e2:
+                     logger.error(f"Failed to delete temporary file after retry: {e2}")
 
 @app.websocket("/ws/realtime-detection")
 async def websocket_realtime_detection(websocket: WebSocket):
