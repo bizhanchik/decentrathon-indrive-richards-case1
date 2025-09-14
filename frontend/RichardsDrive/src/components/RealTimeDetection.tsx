@@ -95,7 +95,7 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
 
   const connectWebSocket = useCallback(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//209.38.245.180:8000/ws/realtime-detection`;
+    const wsUrl = `${protocol}//countercolored-lyingly-edwin.ngrok-free.app/ws/realtime-detection`;
     
     wsRef.current = new WebSocket(wsUrl);
     

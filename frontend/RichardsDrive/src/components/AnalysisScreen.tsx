@@ -135,7 +135,7 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
       console.log(`Analyzing with model type: ${modelType}`);
       
       // Use analyze-all endpoint for comprehensive results from all 4 models
-      const response = await fetch('http://209.38.245.180:8000/analyze-all', {
+      const response = await fetch('https://countercolored-lyingly-edwin.ngrok-free.app/analyze-all', {
         method: 'POST',
         body: formData,
       });
