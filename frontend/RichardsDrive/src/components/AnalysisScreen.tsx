@@ -3,7 +3,7 @@ import { ArrowLeft, CheckCircle, AlertTriangle, Shield, Eye, EyeOff, Sparkles } 
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Loader } from './ui/loader';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils.js';
 
 interface AnalysisScreenProps {
   file: File;

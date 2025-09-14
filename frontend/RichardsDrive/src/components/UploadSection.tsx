@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Upload, Image, CheckCircle, AlertCircle, Zap } from 'lucide-react';
 import { Button } from './ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils.js';
 
 interface UploadSectionProps {
   onFileUpload: (file: File, modelType: string) => void;

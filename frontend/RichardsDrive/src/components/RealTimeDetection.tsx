@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Camera, CameraOff, AlertTriangle, CheckCircle, Loader2, Eye, EyeOff } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils.js';
 
 interface DetectionResult {
   damage_detected: boolean;
