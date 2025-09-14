@@ -54,7 +54,7 @@ class DefectPostProcessor:
         Args:
             class_names: List of class names corresponding to class IDs
         """
-        self.class_names = class_names or ['dent', 'dirt', 'scratch']
+        self.class_names = class_names or ['Dent', 'Dislocation', 'Scratch', 'Shatter', 'damaged', 'severe damage']
         
         # Severity thresholds (can be tuned based on requirements)
         self.severity_thresholds = {
@@ -402,7 +402,7 @@ class DefectPostProcessor:
         return overall_condition, summary
     
     def process_detections(self, results: Any, img_shape: Tuple[int, int], 
-                          image_path: str = "") -> CarAnalysis:
+                          image_path: str = "", with_severity: bool = True) -> CarAnalysis:
         """
         Main processing function that combines all post-processing steps.
         
@@ -421,14 +421,36 @@ class DefectPostProcessor:
         car_bbox = self.estimate_car_bbox(detections, img_shape)
         car_area = (car_bbox[2] - car_bbox[0]) * (car_bbox[3] - car_bbox[1])
         
-        # Group detections by proximity
-        grouped_detections = self.group_detections_by_proximity(detections)
-        
-        # Create defect groups with severity estimation
-        defect_groups = self.create_defect_groups(grouped_detections, car_area)
-        
-        # Generate overall summary
-        overall_condition, summary = self.generate_summary(defect_groups)
+        if with_severity:
+            # Group detections by proximity
+            grouped_detections = self.group_detections_by_proximity(detections)
+            
+            # Create defect groups with severity estimation
+            defect_groups = self.create_defect_groups(grouped_detections, car_area)
+            
+            # Generate overall summary
+            overall_condition, summary = self.generate_summary(defect_groups)
+        else:
+            # Skip severity analysis, just return basic detections
+            defect_groups = []
+            for detection in detections:
+                # Create a simple group for each detection
+                defect_groups.append(DefectGroup(
+                    defect_type=detection.class_name,
+                    detections=[detection],
+                    total_area=detection.area,
+                    bbox=detection.bbox,
+                    severity="unknown",  # No severity estimation
+                    confidence=detection.confidence
+                ))
+            
+            # Simple summary without severity
+            if defect_groups:
+                overall_condition = "Unknown"
+                summary = f"Car detected → {len(defect_groups)} defects found (severity estimation disabled)"
+            else:
+                overall_condition = "Clean"
+                summary = "Car detected → No defects detected"
         
         return CarAnalysis(
             image_path=image_path,

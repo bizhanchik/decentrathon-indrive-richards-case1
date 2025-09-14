@@ -1,9 +1,11 @@
 # Car Defect Detection Backend
 
-A modular ML backend system for detecting and classifying car defects using YOLOv8. This system can identify dents, dirt, and scratches on car images and provide severity assessments.
+A modular ML backend system for detecting and classifying car defects using YOLOv8. This system can identify crack, dent, glass shatter, lamp broken, scratch, and tire flat defects on car images and provide severity assessments. It supports both YOLOv8n and YOLOv8s models with runtime model selection.
 
 ## Features
 
+- **Multiple YOLOv8 Models**: Support for both YOLOv8n (faster) and YOLOv8s (more accurate) models
+- **Runtime Model Selection**: API endpoint with model selection parameter
 - **YOLOv8 Fine-tuning**: Transfer learning from pretrained COCO weights
 - **GPU/CPU Support**: Automatic device detection with fallback to CPU
 - **Checkpointing**: Resume training from saved checkpoints
@@ -17,13 +19,19 @@ A modular ML backend system for detecting and classifying car defects using YOLO
 ```
 backend/
 ├── prepare_data.py     # Dataset merging and preparation
-├── train.py           # YOLOv8 model training with checkpointing
-├── inference.py       # Model inference with severity analysis
+├── train.py           # YOLOv8n model training with checkpointing
+├── inference.py       # Model inference with severity analysis and model selection
 ├── postprocess.py     # Detection grouping and severity estimation
+├── app.py             # FastAPI server with model selection endpoint
 ├── README.md          # This file
 ├── data.yaml          # Generated dataset configuration
 ├── merged_dataset/    # Generated merged dataset (after running prepare_data.py)
+├── yolov8s/           # YOLOv8s specific files
+│   ├── train_small.py # YOLOv8s model training with checkpointing
+│   └── yolov8s.pt     # YOLOv8s pretrained model
 └── runs/              # Training outputs and checkpoints
+    ├── train/yolov8n/ # YOLOv8n model checkpoints
+    └── train/yolov8s/ # YOLOv8s model checkpoints
 ```
 
 ## Installation
@@ -51,8 +59,81 @@ echo "ultralytics>=8.0.0" > requirements.txt
 echo "opencv-python>=4.5.0" >> requirements.txt
 echo "scikit-learn>=1.0.0" >> requirements.txt
 echo "torch>=1.12.0" >> requirements.txt
+```
+
+## Usage
+
+### Training Models
+
+#### Train YOLOv8n Model
+
+```bash
+python train.py --data data.yaml --epochs 100 --batch 16 --img 640 --device 0
+```
+
+#### Train YOLOv8s Model
+
+```bash
+python yolov8s/train_small.py --data data.yaml --epochs 100 --batch 16 --img 640 --device 0
+```
+
+Both training scripts support the following arguments:
+- `--data`: Path to data.yaml file
+- `--epochs`: Number of training epochs
+- `--batch`: Batch size
+- `--img`: Image size
+- `--device`: Device to use (0 for first GPU, cpu for CPU)
+- `--resume`: Resume training from checkpoint
+- `--pretrained`: Use pretrained weights
+
+### Running Inference
+
+You can run inference with either YOLOv8n or YOLOv8s model:
+
+```python
+from inference import CarDefectInference
+
+# For YOLOv8n model
+inference_n = CarDefectInference(model_type='n')
+
+# For YOLOv8s model
+inference_s = CarDefectInference(model_type='s')
+
+# Run inference on an image
+result_n = inference_n.predict_image('path/to/image.jpg')
+result_s = inference_s.predict_image('path/to/image.jpg')
+```
+
+### API Usage
+
+Start the FastAPI server:
+
+```bash
+python app.py
+```
+
+The server will start on http://0.0.0.0:8000 by default.
+
+#### Analyze Car Image with Model Selection
+
+You can analyze a car image using either YOLOv8n or YOLOv8s model by sending a POST request to the `/analyze` endpoint with the model type parameter:
+
+```bash
+# Using curl with YOLOv8n model (default)
+curl -X POST -F "file=@path/to/image.jpg" http://localhost:8000/analyze
+
+# Using curl with YOLOv8s model
+curl -X POST -F "file=@path/to/image.jpg" -F "model_type=s" http://localhost:8000/analyze
+```
+
+The response will include defect detections, severity assessments, and model information in JSON format.
+```
+
+```bash
+# Additional dependencies
 echo "torchvision>=0.13.0" >> requirements.txt
 echo "torchaudio>=0.12.0" >> requirements.txt
+```
 
 # Install
 pip install -r requirements.txt
@@ -367,7 +448,7 @@ python train.py --hsv_h 0.015 --hsv_s 0.7 --hsv_v 0.4
 
 # Model architecture
 python train.py --model yolov8n.pt  # nano (fastest)
-python train.py --model yolov8s.pt  # small
+python train.py --model yolov8s/yolov8s.pt  # small
 python train.py --model yolov8m.pt  # medium
 python train.py --model yolov8l.pt  # large (best accuracy)
 ```

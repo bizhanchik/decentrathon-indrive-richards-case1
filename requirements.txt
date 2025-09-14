@@ -1,0 +1,35 @@
+# Core ML and Computer Vision
+ultralytics>=8.0.0
+opencv-python>=4.5.0
+numpy>=1.21.0
+Pillow>=8.0.0
+
+# PyTorch ecosystem
+torch>=1.12.0
+torchvision>=0.13.0
+torchaudio>=0.12.0
+
+# Data science and visualization
+matplotlib>=3.5.0
+seaborn>=0.11.0
+scikit-learn>=1.0.0
+pandas>=1.3.0
+
+# Utilities
+tqdm>=4.62.0
+pyyaml>=6.0
+argparse
+json
+datetime
+pathlib
+
+# API dependencies (for backend)
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Development and testing
+jupyter>=1.0.0
+ipython>=7.0.0

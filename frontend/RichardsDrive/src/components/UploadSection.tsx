@@ -1,16 +1,17 @@
 import React, { useState, useRef } from 'react';
-import { Upload, Image, CheckCircle, AlertCircle } from 'lucide-react';
+import { Upload, Image, CheckCircle, AlertCircle, Zap } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 
 interface UploadSectionProps {
-  onFileUpload: (file: File) => void;
+  onFileUpload: (file: File, modelType: string) => void;
 }
 
 export const UploadSection: React.FC<UploadSectionProps> = ({ onFileUpload }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [modelType, setModelType] = useState<'s'>('s');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -71,7 +72,8 @@ export const UploadSection: React.FC<UploadSectionProps> = ({ onFileUpload }) =>
 
   const handleAnalyze = () => {
     if (selectedFile) {
-      onFileUpload(selectedFile);
+      console.log('UploadSection - modelType being sent:', modelType);
+      onFileUpload(selectedFile, modelType);
     }
   };
 
@@ -168,21 +170,38 @@ export const UploadSection: React.FC<UploadSectionProps> = ({ onFileUpload }) =>
           </div>
 
           {uploadStatus === 'success' && (
-            <div className="mt-8 flex justify-center space-x-4">
-              <Button
-                variant="outline"
-                onClick={resetUpload}
-                className="border-gray-600 text-gray-300 hover:border-gray-500 hover:text-white hover:bg-transparent"
-              >
-                Upload Another
-              </Button>
-              <Button
-                onClick={handleAnalyze}
-                className="bg-[#c1f21d] text-[#141414] hover:bg-[#c1f21d]/90 font-semibold transform hover:scale-105 transition-all duration-200"
-              >
-                Analyze Now
-              </Button>
-            </div>
+            <>
+              <div className="mt-8 flex justify-center">
+                <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
+                  <h4 className="text-white font-medium mb-3">Using Trained Model:</h4>
+                  <div className="flex justify-center">
+                    <div className="flex items-center px-4 py-3 rounded-lg bg-[#c1f21d]/20 border border-[#c1f21d] text-white">
+                      <CheckCircle className="w-5 h-5 mr-2 text-[#c1f21d]" />
+                      <div className="text-left">
+                        <div className="font-medium">YOLOv8s</div>
+                        <div className="text-xs opacity-70">Trained for car defect detection</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-8 flex justify-center space-x-4">
+                <Button
+                  variant="outline"
+                  onClick={resetUpload}
+                  className="border-gray-600 text-gray-300 hover:border-gray-500 hover:text-white hover:bg-transparent"
+                >
+                  Upload Another
+                </Button>
+                <Button
+                  onClick={handleAnalyze}
+                  className="bg-[#c1f21d] text-[#141414] hover:bg-[#c1f21d]/90 font-semibold transform hover:scale-105 transition-all duration-200"
+                >
+                  Analyze Now
+                </Button>
+              </div>
+            </>
           )}
         </div>
       </div>

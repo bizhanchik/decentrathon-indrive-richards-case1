@@ -1,20 +1,23 @@
 # Richards Drive - Car Damage Detection System
 
-A full-stack application for detecting and analyzing car damage using YOLOv8 computer vision model with a React frontend and FastAPI backend.
+A full-stack application for detecting and analyzing car damage using YOLOv8 computer vision model with a React frontend and FastAPI backend. The system uses a fine-tuned YOLOv8s model to detect various car defects including dents, rust, dirt, broken lights, and paint fading.
 
 ## Features
 
 - **Image Upload**: Drag and drop or click to upload car images
-- **AI Analysis**: YOLOv8-based damage detection with severity assessment
+- **AI Analysis**: YOLOv8s-based damage detection with severity assessment
 - **Real-time Results**: Instant analysis with visual damage heatmaps
 - **Modern UI**: Clean, responsive interface built with React and Tailwind CSS
+- **Multi-class Detection**: Identifies Dent, Dislocation, Scratch, Shatter, damaged, and severe damage defects
+- **Severity Estimation**: Analyzes defect size and distribution to estimate severity
+- **Checkpointing**: Supports training resumption from checkpoints
 
 ## Project Structure
 
 ```
 ├── backend/                 # FastAPI backend
 │   ├── app.py              # Main FastAPI application
-│   ├── train.py            # Model training script
+│   ├── train_small.py      # YOLOv8s model training script
 │   ├── inference.py        # Inference engine
 │   ├── postprocess.py      # Post-processing utilities
 │   ├── prepare_data.py     # Data preparation script
@@ -24,7 +27,11 @@ A full-stack application for detecting and analyzing car damage using YOLOv8 com
 │   │   ├── components/     # React components
 │   │   └── lib/           # Utility functions
 │   └── package.json       # Frontend dependencies
-└── data/                   # Training datasets
+├── zips/                   # Compressed datasets (data1.zip, data2.zip, etc.)
+└── runs/                   # Training outputs and model weights
+    └── train/
+        └── yolov8s/       # YOLOv8s model outputs
+            └── weights/   # Trained model weights
 ```
 
 ## Setup Instructions
@@ -47,14 +54,25 @@ A full-stack application for detecting and analyzing car damage using YOLOv8 com
    pip install -r requirements_api.txt
    ```
 
-3. Prepare the dataset (if training):
+3. Prepare the unified dataset from multiple sources:
    ```bash
    python prepare_data.py
    ```
+   This script will:
+   - Extract datasets from the zips/ directory
+   - Unify class labels using the configurable CLASS_MAPPING
+   - Merge all datasets into a single unified dataset
+   - Split data into train/val sets
+   - Generate data.yaml with the unified class list
 
-4. Train the model (optional - pre-trained weights will be used if available):
+4. Train the YOLOv8s model:
    ```bash
-   python train.py --batch 16 --epochs 50 --workers 0
+   python train_small.py --batch 16 --epochs 50 --workers 0
+   ```
+   
+   To resume training from a checkpoint:
+   ```bash
+   python train_small.py --resume
    ```
 
 5. Start the FastAPI server:
@@ -85,13 +103,36 @@ A full-stack application for detecting and analyzing car damage using YOLOv8 com
 
 ## Usage
 
+### Web Interface
+
 1. Open your browser and go to `http://localhost:5173`
 2. Upload a car image using the drag-and-drop interface
 3. Wait for the AI analysis to complete
 4. View the results including:
-   - Overall cleanliness score
-   - Structural integrity assessment
+   - Overall condition assessment
+   - Defect detection with severity levels
    - Visual damage heatmap overlay
+
+### Command Line Inference
+
+You can also run inference directly from the command line:
+
+```bash
+# Basic inference on a single image
+python inference.py --image path/to/image.jpg
+
+# Specify model type (default is now 's' for YOLOv8s)
+python inference.py --image path/to/image.jpg --model-type s
+
+# Skip severity estimation for faster results
+python inference.py --image path/to/image.jpg --no-severity
+
+# Process a directory of images
+python inference.py --directory path/to/images/
+
+# Save results to JSON
+python inference.py --image path/to/image.jpg --output results.json
+```
 
 ## API Endpoints
 
@@ -99,13 +140,47 @@ A full-stack application for detecting and analyzing car damage using YOLOv8 com
 - `POST /analyze` - Upload and analyze car image
 - `GET /model-info` - Get model information
 
+## Model Training Pipeline
+
+The car defect detection system uses a multi-step pipeline:
+
+1. **Data Preparation** (`prepare_data.py`):
+   - Extracts and unifies multiple datasets with different label sets
+   - Uses a configurable class mapping to standardize labels
+   - Creates a merged dataset with consistent annotations
+   - Splits data into train/val sets
+
+2. **Model Training** (`train_small.py`):
+   - Fine-tunes YOLOv8s on the unified dataset
+   - Uses transfer learning from COCO-pretrained weights
+   - Applies data augmentation during training
+   - Enables mixed precision (AMP) for faster training
+   - Saves checkpoints for resume capability
+
+3. **Inference** (`inference.py`):
+   - Loads the trained YOLOv8s model
+   - Processes images to detect car defects
+   - Runs post-processing to estimate defect severity
+   - Generates structured analysis results
+
+## Defect Classes
+
+The model is trained to detect the following defect types:
+
+- **Dent**: Body damage including dents, scratches, and structural damage
+- **Rust**: Corrosion and rust spots
+- **Dirt**: Dirt, mud, and dust accumulation
+- **Broken Light**: Damaged headlights, taillights, and other lighting
+- **Paint Fade**: Paint damage, fading, and discoloration
+
 ## Model Details
 
-- **Architecture**: YOLOv8 (You Only Look Once v8)
+- **Architecture**: YOLOv8s (You Only Look Once v8 Small)
 - **Task**: Object detection for car damage
-- **Classes**: Various damage types and severity levels
+- **Classes**: 5 defect types (dent, rust, dirt, broken_light, paint_fade)
 - **Input**: RGB images (any size, automatically resized)
-- **Output**: Bounding boxes with confidence scores and damage classifications
+- **Output**: Bounding boxes with confidence scores, defect classifications, and severity estimation
+- **Performance**: Optimized for real-time inference with mixed precision support
 
 ## Development
 
@@ -113,9 +188,11 @@ A full-stack application for detecting and analyzing car damage using YOLOv8 com
 
 To train on your own dataset:
 
-1. Organize your data in YOLO format
-2. Update `data.yaml` with your class names
-3. Run the training script with desired parameters
+1. Place your dataset zip files in the `zips/` directory
+2. Update the `CLASS_MAPPING` in `prepare_data.py` to match your defect classes
+3. Run `prepare_data.py` to unify and prepare your dataset
+4. Run `train_small.py` with desired parameters
+5. Use `--resume` flag to continue training from the latest checkpoint
 
 ### API Integration
 

@@ -208,25 +208,76 @@ __marimo__/
 
 # Project specific - Data folders and archives
 # Exclude large dataset folders and zip files to reduce repo size
-data1/
-data2/
-merged_dataset/
+data/
+zips/
 *.zip
-data.zip
-data2.zip
+*.tar.gz
+*.rar
+*.7z
 
-# Keep trained models but exclude training checkpoints
-# Keep runs/*/weights/*.pt (trained models)
-# Exclude intermediate training files
-runs/*/train/
-runs/*/val/
-runs/checkpoints/
-runs/*/events.out.tfevents.*
-runs/*/opt.yaml
-runs/*/hyp.yaml
-runs/*/results.csv
-runs/*/results.png
-runs/*/confusion_matrix.png
+# Large model files (keep only essential ones)
+# Exclude most model files but keep essential trained models
+*.pth
+*.onnx
+*.tflite
+*.h5
+*.pb
+
+# Exclude .pt files except for essential trained models
+*.pt
+!runs/train/*/weights/best.pt
+!yolov8s.pt
+!yolo11n.pt
+
+# Exclude all training artifacts and intermediate files
+# Note: Order matters - negations must come after general exclusions
+# Exclude specific training artifacts while keeping best.pt files
+runs/train/*/args.yaml
+runs/train/*/results.csv
+runs/train/*/results.png
+runs/train/*/confusion_matrix.png
+runs/train/*/labels.jpg
+runs/train/*/train_batch0.jpg
+runs/train/*/train_batch1.jpg
+runs/train/*/train_batch2.jpg
+runs/train/*/val_batch*.jpg
+runs/train/*/weights/epoch*.pt
+runs/train/*/weights/last.pt
+runs/train/*/weights/training_config.json
+runs/detect/
+runs/val/
+runs/export/
+runs/classify/
+runs/segment/
+runs/pose/
+runs/obb/
+runs/track/
+
+# Training logs and artifacts
+*.log
+events.out.tfevents.*
+*.yaml
+!data.yaml
+*.csv
+*.png
+*.jpg
+!*.jpg
 runs/*/labels*.jpg
 runs/*/train_batch*.jpg
 runs/*/val_batch*.jpg
+runs/*/confusion_matrix.png
+runs/*/results.png
+runs/*/PR_curve.png
+runs/*/F1_curve.png
+
+# Inference results (temporary files)
+backend/inference_results/
+
+# Extracted data folders
+backend/model*/data*_extracted/
+
+# Checkpoints and temporary files
+checkpoints/
+*.tmp
+*.temp
+tmp*

@@ -24,21 +24,56 @@ from postprocess import DefectPostProcessor, CarAnalysis
 class CarDefectInference:
     """Car defect detection inference engine."""
     
-    def __init__(self, model_path: str, class_names: List[str] = None):
+    def __init__(self, model_path: str = None, model_type: str = 's', class_names: List[str] = None):
         """
         Initialize the inference engine.
         
         Args:
-            model_path: Path to the trained YOLO model
+            model_path: Path to the trained YOLO model (if None, will use model_type to find model)
+            model_type: Model type ('n' for YOLOv8n or 's' for YOLOv8s)
             class_names: List of class names
         """
-        self.model_path = model_path
-        self.class_names = class_names or ['dent', 'dirt', 'scratch']
+        self.model_type = model_type.lower()
+        if model_path is None:
+            # Determine model path based on model_type
+            try:
+                self.model_path = self._find_model_path(self.model_type)
+            except FileNotFoundError:
+                if self.model_type == 's':
+                    print(f"Warning: YOLOv8s model not found, falling back to YOLOv8n model")
+                    self.model_path = self._find_model_path('n')
+                else:
+                    raise ValueError(f"Model type '{self.model_type}' not found. Available types: 'n', 's'")
+        else:
+            self.model_path = model_path
+            
+        # Default class names based on the unified dataset
+        self.class_names = class_names or ['Dent', 'Dislocation', 'Scratch', 'Shatter', 'damaged', 'severe damage']
         self.model = None
         self.postprocessor = DefectPostProcessor(class_names=self.class_names)
         
         # Load model
         self.load_model()
+    
+    def _find_model_path(self, model_type: str) -> str:
+        """Find the best model path for a given model type"""
+        # Look in training results directory
+        project_root = Path(__file__).parent.parent
+        models_dir = project_root / 'runs' / 'train' / f'yolov8{model_type}' / 'weights'
+        
+        if not models_dir.exists():
+            raise FileNotFoundError(f"Models directory not found: {models_dir}")
+        
+        # Look for best.pt first, then last.pt
+        best_model = models_dir / "best.pt"
+        if best_model.exists():
+            return str(best_model)
+        
+        last_model = models_dir / "last.pt"
+        if last_model.exists():
+            return str(last_model)
+        
+        raise FileNotFoundError(f"No model checkpoints found in: {models_dir}")
     
     def load_model(self):
         """
@@ -47,16 +82,17 @@ class CarDefectInference:
         if not os.path.exists(self.model_path):
             raise FileNotFoundError(f"Model file not found: {self.model_path}")
         
-        print(f"Loading model from: {self.model_path}")
+        print(f"🔄 Loading YOLOv8{self.model_type.upper()} model...")
         
         try:
             self.model = YOLO(self.model_path)
-            print(f"Model loaded successfully. Device: {self.model.device}")
+            print(f"✅ Model loaded successfully!")
+            print(f"💻 Device: {self.model.device}")
         except Exception as e:
             raise RuntimeError(f"Failed to load model: {e}")
     
     def predict_image(self, image_path: str, conf_threshold: float = 0.25, 
-                     iou_threshold: float = 0.45) -> CarAnalysis:
+                     iou_threshold: float = 0.45, with_severity: bool = True) -> CarAnalysis:
         """
         Run inference on a single image.
         
@@ -94,13 +130,13 @@ class CarDefectInference:
         
         # Post-process results
         analysis = self.postprocessor.process_detections(
-            results, img_shape, image_path
+            results, img_shape, image_path, with_severity=with_severity
         )
         
         return analysis
     
     def predict_batch(self, image_paths: List[str], conf_threshold: float = 0.25,
-                     iou_threshold: float = 0.45) -> List[CarAnalysis]:
+                     iou_threshold: float = 0.45, with_severity: bool = True) -> List[CarAnalysis]:
         """
         Run inference on multiple images.
         
@@ -117,7 +153,7 @@ class CarDefectInference:
         for image_path in image_paths:
             try:
                 analysis = self.predict_image(
-                    image_path, conf_threshold, iou_threshold
+                    image_path, conf_threshold, iou_threshold, with_severity
                 )
                 results.append(analysis)
             except Exception as e:
@@ -136,7 +172,7 @@ class CarDefectInference:
         return results
     
     def predict_directory(self, directory_path: str, conf_threshold: float = 0.25,
-                         iou_threshold: float = 0.45, 
+                         iou_threshold: float = 0.45, with_severity: bool = True,
                          extensions: List[str] = None) -> List[CarAnalysis]:
         """
         Run inference on all images in a directory.
@@ -171,7 +207,7 @@ class CarDefectInference:
         
         print(f"Found {len(image_paths)} images in {directory_path}")
         
-        return self.predict_batch(image_paths, conf_threshold, iou_threshold)
+        return self.predict_batch(image_paths, conf_threshold, iou_threshold, with_severity)
 
 
 def analysis_to_dict(analysis: CarAnalysis) -> Dict[str, Any]:
@@ -314,13 +350,18 @@ Examples:
         '--classes',
         type=str,
         nargs='+',
-        default=['dent', 'dirt', 'scratch'],
-        help='Class names (default: dent dirt scratch)'
+        default=['dent', 'rust', 'dirt', 'broken_light', 'paint_fade'],
+        help='Class names (default: dent rust dirt broken_light paint_fade)'
     )
     parser.add_argument(
         '--quiet', '-q',
         action='store_true',
         help='Suppress detailed output'
+    )
+    parser.add_argument(
+        '--no-severity',
+        action='store_true',
+        help='Skip severity estimation'
     )
     
     args = parser.parse_args()
@@ -339,20 +380,20 @@ Examples:
         if args.image:
             # Single image
             analysis = inference_engine.predict_image(
-                args.image, args.conf, args.iou
+                args.image, args.conf, args.iou, not args.no_severity
             )
             analyses = [analysis]
             
         elif args.directory:
             # Directory of images
             analyses = inference_engine.predict_directory(
-                args.directory, args.conf, args.iou
+                args.directory, args.conf, args.iou, not args.no_severity
             )
             
         elif args.images:
             # List of images
             analyses = inference_engine.predict_batch(
-                args.images, args.conf, args.iou
+                args.images, args.conf, args.iou, not args.no_severity
             )
         
         # Process results
