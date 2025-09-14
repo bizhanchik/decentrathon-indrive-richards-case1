@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, CheckCircle, AlertTriangle, Shield, Eye, EyeOff, Sparkles } from 'lucide-react';
+import { ArrowLeft, CheckCircle, AlertTriangle, AlertCircle, Shield, Eye, EyeOff, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Loader } from './ui/loader';
@@ -55,6 +55,33 @@ interface AllModelsAnalysisResult {
   model2_analysis: SingleModelResult | null;
   model3_analysis: SingleModelResult | null;
   model4_analysis: SingleModelResult | null;
+  individual_boxes?: {
+    model1: Array<{
+      box: number[];
+      confidence: number;
+      class: string;
+    }>;
+    model2: Array<{
+      box: number[];
+      confidence: number;
+      class: string;
+    }>;
+    model3: Array<{
+      box: number[];
+      confidence: number;
+      class: string;
+    }>;
+    model4: Array<{
+      box: number[];
+      confidence: number;
+      class: string;
+    }>;
+  };
+  unified_boxes?: Array<{
+    box: number[];
+    confidence: number;
+    class: string;
+  }>;
   combined_summary: {
     overall_score: number;
     overall_status: 'excellent' | 'good' | 'fair' | 'poor';
@@ -90,6 +117,21 @@ interface AllModelsAnalysisResult {
         detection_count: number;
         severity?: string;
       }>;
+      numeric_assessment?: {
+        score: number;
+        severity_level: string;
+        damage_impact: number;
+        confidence_factor: number;
+        area_coverage: number;
+        damage_breakdown: Record<string, {
+          count: number;
+          total_impact: number;
+          avg_confidence: number;
+          severity_level: string;
+          confidences: number[];
+        }>;
+        total_damages: number;
+      };
     };
   };
   model_info: {
@@ -108,10 +150,11 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
   const [results, setResults] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showBoundingBoxes, setShowBoundingBoxes] = useState(true);
-  const [showMainModelBoxes, setShowMainModelBoxes] = useState(true);
-  const [showModel2Boxes, setShowModel2Boxes] = useState(true);
-  const [showModel3Boxes, setShowModel3Boxes] = useState(true);
-  const [showModel4Boxes, setShowModel4Boxes] = useState(true);
+  const [showMainModelBoxes, setShowMainModelBoxes] = useState(false);
+  const [showModel2Boxes, setShowModel2Boxes] = useState(false);
+  const [showModel3Boxes, setShowModel3Boxes] = useState(false);
+  const [showModel4Boxes, setShowModel4Boxes] = useState(false);
+  const [boxDisplayMode, setBoxDisplayMode] = useState<'individual' | 'unified'>('unified');
 
 
   const analyzeImage = async (imageFile: File) => {
@@ -144,6 +187,8 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
         model2_analysis: analysisResult.model2?.analysis || null,
         model3_analysis: analysisResult.model3?.analysis || null,
         model4_analysis: analysisResult.model4?.analysis || null,
+        individual_boxes: analysisResult.individual_boxes || null,
+        unified_boxes: analysisResult.unified_boxes || null,
         combined_summary: analysisResult.combined_summary || null,
         model_info: {
           main_model: analysisResult.main_model?.model_info || null,
@@ -271,8 +316,42 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
                    </Button>
                 </div>
                 
-                {/* Individual Model Toggles */}
+                {/* WBF Display Mode Toggle */}
                 {'combined_summary' in results && showBoundingBoxes && (
+                  <div className="flex justify-end mb-2">
+                    <div className="flex gap-2">
+                      <Button
+                        variant={boxDisplayMode === 'individual' ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setBoxDisplayMode('individual')}
+                        className={cn(
+                          "text-xs",
+                          boxDisplayMode === 'individual'
+                            ? "bg-orange-500 text-white hover:bg-orange-600"
+                            : "border-orange-500/40 text-orange-400 hover:bg-orange-500/10"
+                        )}
+                      >
+                        Individual Models
+                      </Button>
+                      <Button
+                        variant={boxDisplayMode === 'unified' ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setBoxDisplayMode('unified')}
+                        className={cn(
+                          "text-xs",
+                          boxDisplayMode === 'unified'
+                            ? "bg-green-500 text-white hover:bg-green-600"
+                            : "border-green-500/40 text-green-400 hover:bg-green-500/10"
+                        )}
+                      >
+                        Unified (WBF)
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Individual Model Toggles */}
+                {'combined_summary' in results && showBoundingBoxes && boxDisplayMode === 'individual' && (
                   <div className="flex justify-end">
                     <div className="flex flex-wrap gap-2">
                       {results.combined_summary.models_used.main_model && (
@@ -639,13 +718,189 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
                             title={`Model 4: ${area.description}`}
                           />
                         </div>
-                      ))}
+                      ))}                    </>                  )}                  
+                  {/* WBF Unified Boxes */}
+                  {'combined_summary' in results && boxDisplayMode === 'unified' && results.unified_boxes && (
+                    <>
+                      {results.unified_boxes.map((detection, index) => {
+                        // Convert [x_min, y_min, x_max, y_max] to percentage coordinates
+                        const [x_min, y_min, x_max, y_max] = detection.box;
+                        const imageElement = document.querySelector('img');
+                        if (!imageElement) return null;
+                        
+                        const imgWidth = imageElement.naturalWidth;
+                        const imgHeight = imageElement.naturalHeight;
+                        
+                        const x1_percent = (x_min / imgWidth) * 100;
+                        const y1_percent = (y_min / imgHeight) * 100;
+                        const x2_percent = (x_max / imgWidth) * 100;
+                        const y2_percent = (y_max / imgHeight) * 100;
+                        
+                        return (
+                          <div key={`unified-${index}`}>
+                            {/* Bounding Box */}
+                            <div
+                              className="absolute border-2 border-green-400 bg-green-400/10 rounded-lg transition-all duration-300"
+                              style={{
+                                left: `${x1_percent}%`,
+                                top: `${y1_percent}%`,
+                                width: `${x2_percent - x1_percent}%`,
+                                height: `${y2_percent - y1_percent}%`,
+                                boxShadow: '0 0 15px #22c55e80'
+                              }}
+                            >
+                              {/* Label with Confidence */}
+                              <div className="absolute -top-6 left-0 px-2 py-1 rounded text-xs font-semibold text-white bg-green-500 shadow-lg">
+                                WBF: {detection.class.toUpperCase()} - {Math.round(detection.confidence * 100)}% conf
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </>
                   )}
-                </div>
-              )}
-            </div>
-          </div>
+                  
+                  {/* Individual Model Boxes */}
+                  {'combined_summary' in results && boxDisplayMode === 'individual' && results.individual_boxes && (
+                    <>
+                      {/* Model 1 Boxes */}
+                      {showMainModelBoxes && results.individual_boxes.model1?.map((detection, index) => {
+                        const [x_min, y_min, x_max, y_max] = detection.box;
+                        const imageElement = document.querySelector('img');
+                        if (!imageElement) return null;
+                        
+                        const imgWidth = imageElement.naturalWidth;
+                        const imgHeight = imageElement.naturalHeight;
+                        
+                        const x1_percent = (x_min / imgWidth) * 100;
+                        const y1_percent = (y_min / imgHeight) * 100;
+                        const x2_percent = (x_max / imgWidth) * 100;
+                        const y2_percent = (y_max / imgHeight) * 100;
+                        
+                        return (
+                          <div key={`model1-${index}`}>
+                            <div
+                              className="absolute border-2 border-yellow-400 bg-yellow-400/10 rounded-lg transition-all duration-300"
+                              style={{
+                                left: `${x1_percent}%`,
+                                top: `${y1_percent}%`,
+                                width: `${x2_percent - x1_percent}%`,
+                                height: `${y2_percent - y1_percent}%`,
+                                boxShadow: '0 0 15px #eab30880'
+                              }}
+                            >
+                              <div className="absolute -top-6 left-0 px-2 py-1 rounded text-xs font-semibold text-black bg-yellow-400 shadow-lg">
+                                M1: {detection.class.toUpperCase()} - {Math.round(detection.confidence * 100)}%
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      
+                      {/* Model 2 Boxes */}
+                      {showModel2Boxes && results.individual_boxes.model2?.map((detection, index) => {
+                        const [x_min, y_min, x_max, y_max] = detection.box;
+                        const imageElement = document.querySelector('img');
+                        if (!imageElement) return null;
+                        
+                        const imgWidth = imageElement.naturalWidth;
+                        const imgHeight = imageElement.naturalHeight;
+                        
+                        const x1_percent = (x_min / imgWidth) * 100;
+                        const y1_percent = (y_min / imgHeight) * 100;
+                        const x2_percent = (x_max / imgWidth) * 100;
+                        const y2_percent = (y_max / imgHeight) * 100;
+                        
+                        return (
+                          <div key={`model2-${index}`}>
+                            <div
+                              className="absolute border-2 border-blue-400 bg-blue-400/10 rounded-lg transition-all duration-300"
+                              style={{
+                                left: `${x1_percent}%`,
+                                top: `${y1_percent}%`,
+                                width: `${x2_percent - x1_percent}%`,
+                                height: `${y2_percent - y1_percent}%`,
+                                boxShadow: '0 0 15px #3b82f680'
+                              }}
+                            >
+                              <div className="absolute -top-6 left-0 px-2 py-1 rounded text-xs font-semibold text-white bg-blue-500 shadow-lg">
+                                M2: {detection.class.toUpperCase()} - {Math.round(detection.confidence * 100)}%
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      
+                      {/* Model 3 Boxes */}
+                      {showModel3Boxes && results.individual_boxes.model3?.map((detection, index) => {
+                        const [x_min, y_min, x_max, y_max] = detection.box;
+                        const imageElement = document.querySelector('img');
+                        if (!imageElement) return null;
+                        
+                        const imgWidth = imageElement.naturalWidth;
+                        const imgHeight = imageElement.naturalHeight;
+                        
+                        const x1_percent = (x_min / imgWidth) * 100;
+                        const y1_percent = (y_min / imgHeight) * 100;
+                        const x2_percent = (x_max / imgWidth) * 100;
+                        const y2_percent = (y_max / imgHeight) * 100;
+                        
+                        return (
+                          <div key={`model3-${index}`}>
+                            <div
+                              className="absolute border-2 border-purple-400 bg-purple-400/10 rounded-lg transition-all duration-300"
+                              style={{
+                                left: `${x1_percent}%`,
+                                top: `${y1_percent}%`,
+                                width: `${x2_percent - x1_percent}%`,
+                                height: `${y2_percent - y1_percent}%`,
+                                boxShadow: '0 0 15px #a855f780'
+                              }}
+                            >
+                              <div className="absolute -top-6 left-0 px-2 py-1 rounded text-xs font-semibold text-white bg-purple-500 shadow-lg">
+                                M3: {detection.class.toUpperCase()} - {Math.round(detection.confidence * 100)}%
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      
+                      {/* Model 4 Boxes */}
+                      {showModel4Boxes && results.individual_boxes.model4?.map((detection, index) => {
+                        const [x_min, y_min, x_max, y_max] = detection.box;
+                        const imageElement = document.querySelector('img');
+                        if (!imageElement) return null;
+                        
+                        const imgWidth = imageElement.naturalWidth;
+                        const imgHeight = imageElement.naturalHeight;
+                        
+                        const x1_percent = (x_min / imgWidth) * 100;
+                        const y1_percent = (y_min / imgHeight) * 100;
+                        const x2_percent = (x_max / imgWidth) * 100;
+                        const y2_percent = (y_max / imgHeight) * 100;
+                        
+                        return (
+                          <div key={`model4-${index}`}>
+                            <div
+                              className="absolute border-2 border-orange-400 bg-orange-400/10 rounded-lg transition-all duration-300"
+                              style={{
+                                left: `${x1_percent}%`,
+                                top: `${y1_percent}%`,
+                                width: `${x2_percent - x1_percent}%`,
+                                height: `${y2_percent - y1_percent}%`,
+                                boxShadow: '0 0 15px #f97316880'
+                              }}
+                            >
+                              <div className="absolute -top-6 left-0 px-2 py-1 rounded text-xs font-semibold text-white bg-orange-500 shadow-lg">
+                                M4: {detection.class.toUpperCase()} - {Math.round(detection.confidence * 100)}%
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </>
+                  )}
+                </div>              )}            </div>          </div>
 
           {/* Results Section */}
           <div className="space-y-6">
@@ -697,48 +952,202 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
                           
 
 
-                          {/* Ensemble Details */}
+                          {/* Analysis Summary */}
                           {results.combined_summary.ensemble_details && (
                             <div className="mt-4 border-t border-gray-600 pt-4">
                               <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center">
                                 <Shield className="w-4 h-4 mr-2 text-[#c1f21d]" />
-                                Ensemble Analysis Details
+                                Analysis Summary
                               </h4>
-                              <div className="bg-[#1a1a1a] rounded-lg p-3 space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-gray-400 text-sm">Prediction:</span>
-                                  <span className="text-white text-sm font-medium">{results.combined_summary.ensemble_details.prediction}</span>
+                              <div className="bg-[#1a1a1a] rounded-lg p-4 space-y-4">
+                                {/* Main Result with Large Visual Indicator */}
+                                <div className="text-center py-4">
+                                  <div className={cn(
+                                    "inline-flex items-center justify-center w-16 h-16 rounded-full mb-3",
+                                    (results.combined_summary.ensemble_details.prediction === 'damage_detected' || results.combined_summary.ensemble_details.prediction === 'damage') ? "bg-red-900/30 border-2 border-red-500" : 
+                                    results.combined_summary.ensemble_details.prediction === 'uncertain_condition' ? "bg-yellow-900/30 border-2 border-yellow-500" : 
+                                    "bg-green-900/30 border-2 border-green-500"
+                                  )}>
+                                    {(results.combined_summary.ensemble_details.prediction === 'damage_detected' || results.combined_summary.ensemble_details.prediction === 'damage') ? (
+                                      <AlertTriangle className="w-8 h-8 text-red-400" />
+                                    ) : results.combined_summary.ensemble_details.prediction === 'uncertain_condition' ? (
+                                      <AlertCircle className="w-8 h-8 text-yellow-400" />
+                                    ) : (
+                                      <CheckCircle className="w-8 h-8 text-green-400" />
+                                    )}
+                                  </div>
+                                  <h3 className={cn(
+                                    "text-xl font-bold mb-2",
+                                    (results.combined_summary.ensemble_details.prediction === 'damage_detected' || results.combined_summary.ensemble_details.prediction === 'damage') ? "text-red-400" : 
+                                    results.combined_summary.ensemble_details.prediction === 'uncertain_condition' ? "text-yellow-400" : 
+                                    "text-green-400"
+                                  )}>
+                                    {(results.combined_summary.ensemble_details.prediction === 'damage_detected' || results.combined_summary.ensemble_details.prediction === 'damage') ? 'Damage Detected' : 
+                                     results.combined_summary.ensemble_details.prediction === 'uncertain_condition' ? 'Uncertain Condition' : 
+                                     'No Damage Found'}
+                                  </h3>
+                                  <p className="text-gray-400 text-sm">
+                                    Confidence: {Math.round(results.combined_summary.ensemble_details.confidence * 100)}%
+                                  </p>
                                 </div>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-gray-400 text-sm">Confidence:</span>
-                                  <span className="text-[#c1f21d] text-sm font-medium">{results.combined_summary.ensemble_details.confidence}%</span>
-                                </div>
 
-
-
-                                {results.combined_summary.ensemble_details.damage_types.length > 0 && (
-                                  <div className="mt-2">
-                                    <span className="text-gray-400 text-sm">Damage Types:</span>
-                                    <div className="flex flex-wrap gap-1 mt-1">
+                                {/* Damage Types - Show if damage detected or uncertain condition */}
+                                {((results.combined_summary.ensemble_details.prediction === 'damage_detected' || results.combined_summary.ensemble_details.prediction === 'damage') && results.combined_summary.ensemble_details.damage_types && results.combined_summary.ensemble_details.damage_types.length > 0) && (
+                                  <div className="space-y-2">
+                                    <span className="text-gray-400 text-sm font-medium">Detected Issues:</span>
+                                    <div className="flex flex-wrap gap-2">
                                       {results.combined_summary.ensemble_details.damage_types.map((damageType, index) => (
-                                        <span key={index} className="bg-red-900/30 text-red-300 text-xs px-2 py-1 rounded">
-                                          {damageType.type}
+                                        <span key={index} className="bg-red-900/30 text-red-300 px-3 py-1 rounded-full text-sm font-medium border border-red-700/50">
+                                          {typeof damageType === 'string' ? damageType.charAt(0).toUpperCase() + damageType.slice(1) : damageType.type?.charAt(0).toUpperCase() + damageType.type?.slice(1)}
                                         </span>
                                       ))}
                                     </div>
                                   </div>
                                 )}
-                                <div className="mt-2 pt-2 border-t border-gray-700">
-                                  <span className="text-gray-400 text-sm">Reasoning:</span>
-                                  <p className="text-gray-300 text-sm mt-1">
-                                    {typeof results.combined_summary.ensemble_details.reasoning === 'object' 
-                                      ? JSON.stringify(results.combined_summary.ensemble_details.reasoning, null, 2)
-                                      : results.combined_summary.ensemble_details.reasoning}
-                                  </p>
-                                </div>
+
+                                {/* Key Insights - Simplified reasoning */}
+                                {results.combined_summary.ensemble_details.reasoning && (
+                                  <div className="space-y-2">
+                                    <span className="text-gray-400 text-sm font-medium">Key Insights:</span>
+                                    <div className="bg-gray-800/50 rounded-lg p-3">
+                                      <p className="text-gray-300 text-sm leading-relaxed">
+                                        {typeof results.combined_summary.ensemble_details.reasoning === 'object' 
+                                          ? JSON.stringify(results.combined_summary.ensemble_details.reasoning, null, 2)
+                                          : results.combined_summary.ensemble_details.reasoning}
+                                      </p>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Override Notice */}
                                 {results.combined_summary.ensemble_details.override_applied && (
-                                  <div className="mt-2 bg-blue-900/20 border border-blue-700/30 rounded p-2">
-                                    <span className="text-blue-300 text-xs font-medium">🔧 Model Override Applied</span>
+                                  <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-3">
+                                    <div className="flex items-center">
+                                      <div className="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
+                                      <span className="text-blue-300 text-sm font-medium">Advanced model override applied for enhanced accuracy</span>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Numeric Assessment */}
+                          {results.combined_summary.ensemble_details?.numeric_assessment && (
+                            <div className="mt-4 border-t border-gray-600 pt-4">
+                              <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center">
+                                <Sparkles className="w-4 h-4 mr-2 text-[#c1f21d]" />
+                                Numeric Assessment (0-100)
+                              </h4>
+                              <div className="bg-[#1a1a1a] rounded-lg p-4 space-y-4">
+                                {/* Overall Score with Progress Bar */}
+                                <div className="space-y-2">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-gray-400 text-sm">Overall Score:</span>
+                                    <span className={cn(
+                                      "text-lg font-bold",
+                                      results.combined_summary.ensemble_details.numeric_assessment.score >= 90 ? "text-green-400" :
+                                      results.combined_summary.ensemble_details.numeric_assessment.score >= 70 ? "text-[#c1f21d]" :
+                                      results.combined_summary.ensemble_details.numeric_assessment.score >= 50 ? "text-yellow-400" :
+                                      results.combined_summary.ensemble_details.numeric_assessment.score >= 30 ? "text-orange-400" :
+                                      "text-red-400"
+                                    )}>
+                                      {results.combined_summary.ensemble_details.numeric_assessment.score.toFixed(1)}/100
+                                    </span>
+                                  </div>
+                                  <div className="w-full bg-gray-700 rounded-full h-3">
+                                    <div 
+                                      className={cn(
+                                        "h-3 rounded-full transition-all duration-500",
+                                        results.combined_summary.ensemble_details.numeric_assessment.score >= 90 ? "bg-green-400" :
+                                        results.combined_summary.ensemble_details.numeric_assessment.score >= 70 ? "bg-[#c1f21d]" :
+                                        results.combined_summary.ensemble_details.numeric_assessment.score >= 50 ? "bg-yellow-400" :
+                                        results.combined_summary.ensemble_details.numeric_assessment.score >= 30 ? "bg-orange-400" :
+                                        "bg-red-400"
+                                      )}
+                                      style={{ width: `${results.combined_summary.ensemble_details.numeric_assessment.score}%` }}
+                                    />
+                                  </div>
+                                </div>
+
+                                {/* Severity Level Badge */}
+                                <div className="flex items-center justify-between">
+                                  <span className="text-gray-400 text-sm">Severity Level:</span>
+                                  <span className={cn(
+                                    "px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide",
+                                    results.combined_summary.ensemble_details.numeric_assessment.severity_level === 'excellent' ? "bg-green-900/30 text-green-300 border border-green-700/50" :
+                                    results.combined_summary.ensemble_details.numeric_assessment.severity_level === 'good' ? "bg-[#c1f21d]/20 text-[#c1f21d] border border-[#c1f21d]/50" :
+                                    results.combined_summary.ensemble_details.numeric_assessment.severity_level === 'fair' ? "bg-yellow-900/30 text-yellow-300 border border-yellow-700/50" :
+                                    results.combined_summary.ensemble_details.numeric_assessment.severity_level === 'poor' ? "bg-orange-900/30 text-orange-300 border border-orange-700/50" :
+                                    "bg-red-900/30 text-red-300 border border-red-700/50"
+                                  )}>
+                                    {results.combined_summary.ensemble_details.numeric_assessment.severity_level}
+                                  </span>
+                                </div>
+
+                                {/* Key Metrics Grid */}
+                                <div className="grid grid-cols-2 gap-3">
+                                  <div className="bg-gray-800/50 rounded-lg p-3">
+                                    <div className="text-xs text-gray-400 mb-1">Damage Impact</div>
+                                    <div className="text-sm font-semibold text-white">
+                                      {results.combined_summary.ensemble_details.numeric_assessment.damage_impact.toFixed(1)}
+                                    </div>
+                                  </div>
+                                  <div className="bg-gray-800/50 rounded-lg p-3">
+                                    <div className="text-xs text-gray-400 mb-1">Area Coverage</div>
+                                    <div className="text-sm font-semibold text-white">
+                                      {results.combined_summary.ensemble_details.numeric_assessment.area_coverage.toFixed(2)}%
+                                    </div>
+                                  </div>
+                                  <div className="bg-gray-800/50 rounded-lg p-3">
+                                    <div className="text-xs text-gray-400 mb-1">Confidence Factor</div>
+                                    <div className="text-sm font-semibold text-white">
+                                      {results.combined_summary.ensemble_details.numeric_assessment.confidence_factor.toFixed(2)}
+                                    </div>
+                                  </div>
+                                  <div className="bg-gray-800/50 rounded-lg p-3">
+                                    <div className="text-xs text-gray-400 mb-1">Total Damages</div>
+                                    <div className="text-sm font-semibold text-white">
+                                      {results.combined_summary.ensemble_details.numeric_assessment.total_damages}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Damage Breakdown */}
+                                {Object.keys(results.combined_summary.ensemble_details.numeric_assessment.damage_breakdown).length > 0 && (
+                                  <div className="space-y-2">
+                                    <span className="text-gray-400 text-sm">Damage Breakdown:</span>
+                                    <div className="space-y-2">
+                                      {Object.entries(results.combined_summary.ensemble_details.numeric_assessment.damage_breakdown).map(([damageType, details]) => (
+                                        <div key={damageType} className="bg-gray-800/30 rounded-lg p-3">
+                                          <div className="flex items-center justify-between mb-2">
+                                            <span className="text-sm font-medium text-white capitalize">{damageType}</span>
+                                            <span className={cn(
+                                              "text-xs px-2 py-1 rounded",
+                                              details.severity_level === 'minor' ? "bg-yellow-900/30 text-yellow-300" :
+                                              details.severity_level === 'moderate' ? "bg-orange-900/30 text-orange-300" :
+                                              "bg-red-900/30 text-red-300"
+                                            )}>
+                                              {details.severity_level}
+                                            </span>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-2 text-xs">
+                                            <div>
+                                              <span className="text-gray-400">Count: </span>
+                                              <span className="text-white">{details.count}</span>
+                                            </div>
+                                            <div>
+                                              <span className="text-gray-400">Impact: </span>
+                                              <span className="text-white">{details.total_impact.toFixed(1)}</span>
+                                            </div>
+                                            <div>
+                                              <span className="text-gray-400">Avg Conf: </span>
+                                              <span className="text-white">{(details.avg_confidence * 100).toFixed(0)}%</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 )}
                               </div>

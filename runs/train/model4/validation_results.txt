@@ -1,0 +1,29 @@
+Model4 Validation Results (4-class dataset)
+===========================================
+
+Model Summary: YOLOv8 architecture trained on 4-class car damage dataset
+Dataset: Validation set processed
+
+Overall Performance Metrics:
+---------------------------
+mAP@50:     0.5647
+Precision:  0.7267
+Recall:     0.4886
+mAP@50-95:  0.3004
+
+Per-Class Performance:
+---------------------
+Class               Images  Instances  Precision  Recall   mAP@50   mAP@50-95
+all                    50        162      0.727    0.489    0.565     0.300
+damaged-dent           23         87      0.631    0.058    0.074     0.049
+damaged-scratch        15         51      0.622    0.130    0.180     0.086
+good_condition         12         13      0.629    1.000    0.918     0.826
+severe damage          10         11      0.789    0.636    0.655     0.427
+
+Inference Speed:
+---------------
+Preprocess:  3.6ms per image
+Inference:   14.7ms per image
+Postprocess: 7.1ms per image
+
+Results saved to: C:\Users\aidyn\Desktop\PR\Decentraton\decentrathon-indrive-richards-case1\runs\detect\val6

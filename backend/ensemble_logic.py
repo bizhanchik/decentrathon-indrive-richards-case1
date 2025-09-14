@@ -149,8 +149,163 @@ class EnsembleLogic:
         
         return resolved_analysis
     
+    def calculate_numeric_status_score(self, detections: List[Dict], image_area: Optional[float] = None) -> Dict[str, Any]:
+        """
+        Calculate comprehensive numeric status score (0-100) for car condition assessment.
+        100 = Perfect condition, 0 = Severely damaged
+        
+        Args:
+            detections: List of damage detections
+            image_area: Total image area for damage coverage calculation
+            
+        Returns:
+            Dict containing score, severity level, and detailed breakdown
+        """
+        if not detections:
+            return {
+                'score': 100,
+                'severity_level': 'excellent',
+                'damage_impact': 0.0,
+                'confidence_factor': 1.0,
+                'area_coverage': 0.0,
+                'damage_breakdown': {},
+                'total_damages': 0
+            }
+        
+        # Enhanced damage type severity weights (impact on score)
+        damage_severity_weights = {
+            # Critical structural damages (high impact)
+            'severe damage': {'base_impact': 35, 'severity_level': 'critical'},
+            'severe': {'base_impact': 35, 'severity_level': 'critical'},
+            'shatter': {'base_impact': 30, 'severity_level': 'critical'},
+            'glass shatter': {'base_impact': 30, 'severity_level': 'critical'},
+            'structural damage': {'base_impact': 28, 'severity_level': 'critical'},
+            
+            # Major damages (medium-high impact)
+            'crack': {'base_impact': 20, 'severity_level': 'major'},
+            'lamp broken': {'base_impact': 18, 'severity_level': 'major'},
+            'tire flat': {'base_impact': 25, 'severity_level': 'major'},
+            'dislocation': {'base_impact': 22, 'severity_level': 'major'},
+            
+            # Moderate damages (medium impact)
+            'dent': {'base_impact': 15, 'severity_level': 'moderate'},
+            'damaged-dent': {'base_impact': 15, 'severity_level': 'moderate'},
+            'damaged': {'base_impact': 12, 'severity_level': 'moderate'},
+            
+            # Minor damages (low impact)
+            'scratch': {'base_impact': 8, 'severity_level': 'minor'},
+            'damaged-scratch': {'base_impact': 8, 'severity_level': 'minor'},
+        }
+        
+        total_damage_impact = 0.0
+        damage_breakdown = {}
+        total_area_coverage = 0.0
+        confidence_scores = []
+        
+        for detection in detections:
+            class_name = detection.get('class', '').lower()
+            confidence = detection.get('confidence', 0.0)
+            bbox = detection.get('bbox', [])
+            
+            # Get damage severity info
+            damage_info = damage_severity_weights.get(class_name, {
+                'base_impact': 10, 'severity_level': 'minor'
+            })
+            
+            base_impact = damage_info['base_impact']
+            severity_level = damage_info['severity_level']
+            
+            # Confidence adjustment (0.5-1.5 multiplier)
+            confidence_multiplier = 0.5 + confidence
+            
+            # Area coverage calculation if bbox available
+            area_multiplier = 1.0
+            if bbox and len(bbox) >= 4 and image_area:
+                damage_area = abs((bbox[2] - bbox[0]) * (bbox[3] - bbox[1]))
+                coverage_ratio = damage_area / image_area
+                total_area_coverage += coverage_ratio
+                
+                # Area impact: larger damages have higher impact
+                if coverage_ratio > 0.1:  # Large damage (>10% of image)
+                    area_multiplier = 1.5
+                elif coverage_ratio > 0.05:  # Medium damage (5-10%)
+                    area_multiplier = 1.2
+                elif coverage_ratio > 0.01:  # Small damage (1-5%)
+                    area_multiplier = 1.0
+                else:  # Very small damage (<1%)
+                    area_multiplier = 0.8
+            
+            # Calculate final damage impact
+            damage_impact = base_impact * confidence_multiplier * area_multiplier
+            total_damage_impact += damage_impact
+            
+            # Track for breakdown
+            if class_name not in damage_breakdown:
+                damage_breakdown[class_name] = {
+                    'count': 0,
+                    'total_impact': 0.0,
+                    'avg_confidence': 0.0,
+                    'severity_level': severity_level,
+                    'confidences': []
+                }
+            
+            damage_breakdown[class_name]['count'] += 1
+            damage_breakdown[class_name]['total_impact'] += damage_impact
+            damage_breakdown[class_name]['confidences'].append(confidence)
+            confidence_scores.append(confidence)
+        
+        # Calculate average confidence
+        avg_confidence = sum(confidence_scores) / len(confidence_scores) if confidence_scores else 1.0
+        
+        # Calculate average confidence for each damage type
+        for damage_type in damage_breakdown:
+            confidences = damage_breakdown[damage_type]['confidences']
+            damage_breakdown[damage_type]['avg_confidence'] = sum(confidences) / len(confidences)
+        
+        # Base penalty for ANY damage detection (lenient approach)
+        num_damages = len(detections)
+        if num_damages > 0:
+            # Base penalty for having any damage at all (further reduced for leniency)
+            base_damage_penalty = 5  # Reduced from 10 to 5 for more lenient scoring
+            total_damage_impact += base_damage_penalty
+            
+            # Additional penalty for multiple damages
+            if num_damages > 1:
+                multiple_damage_penalty = min((num_damages - 1) * 5, 15)  # Reduced penalty
+                total_damage_impact += multiple_damage_penalty
+        
+        # Calculate final score (100 - damage impact)
+        final_score = max(100 - total_damage_impact, 0)
+        
+        # Lenient severity level thresholds (more forgiving)
+        if final_score >= 85:  # Lowered from 90 for easier excellent rating
+            severity_level = 'excellent'
+        elif final_score >= 70:  # Lowered from 75 for easier good rating
+            severity_level = 'good'
+        elif final_score >= 55:  # Lowered from 60 for easier fair rating
+            severity_level = 'fair'
+        elif final_score >= 40:  # Lowered from 45 for easier poor rating
+            severity_level = 'poor'
+        elif final_score >= 20:  # Lowered from 25 for easier bad rating
+            severity_level = 'bad'
+        elif final_score >= 5:   # Lowered from 10 for easier critical rating
+            severity_level = 'critical'
+        else:
+            severity_level = 'severely_damaged'
+        
+        return {
+            'score': round(final_score, 1),
+            'severity_level': severity_level,
+            'damage_impact': round(total_damage_impact, 2),
+            'confidence_factor': round(avg_confidence, 3),
+            'area_coverage': round(total_area_coverage * 100, 2),  # Percentage
+            'damage_breakdown': damage_breakdown,
+            'total_damages': num_damages
+        }
+    
     def calculate_damage_severity_score(self, detections: List[Dict]) -> float:
         """
+        Legacy method for backward compatibility.
         Calculate damage severity score based on detections.
         Higher score = more damage.
         """
@@ -196,6 +351,7 @@ class EnsembleLogic:
             'dent': 'dent',
             'damaged-dent': 'dent',
             'damaged-scratch': 'scratch',
+            'scratch': 'scratch',  # Restored scratch mapping
             'shatter': 'glass_damage',
             'glass shatter': 'glass_damage',
             'severe damage': 'severe_damage',
@@ -204,10 +360,37 @@ class EnsembleLogic:
             'lamp broken': 'lamp_damage',
             'dislocation': 'structural_damage',
             'damaged': 'general_damage'
-            # Note: 'scratch' and 'tire flat' mappings removed as they are filtered out
+            # Note: Restored scratch mapping since filtering has been removed
         }
         
         return class_mapping.get(class_name, class_name)
+    
+    def apply_class_priority_ensemble(self, aggregated: Dict[str, Dict]) -> Dict[str, Dict]:
+        """
+        Apply class priority logic where 'good condition' overrides 'scratch' detections.
+        
+        Args:
+            aggregated: Dictionary of aggregated detections by class
+            
+        Returns:
+            Modified aggregated dictionary with class priority applied
+        """
+        # Check if both good_condition and scratch are present
+        has_good_condition = 'good_condition' in aggregated and aggregated['good_condition']['final_confidence'] >= 0.3
+        has_scratch = 'scratch' in aggregated and aggregated['scratch']['final_confidence'] >= 0.3
+        
+        if has_good_condition and has_scratch:
+            good_confidence = aggregated['good_condition']['final_confidence']
+            scratch_confidence = aggregated['scratch']['final_confidence']
+            
+            logger.info(f"Class priority conflict detected: good_condition ({good_confidence:.3f}) vs scratch ({scratch_confidence:.3f})")
+            
+            # Good condition overrides scratch regardless of confidence
+            # Remove scratch from aggregated results
+            del aggregated['scratch']
+            logger.info("Applied class priority: good_condition overrides scratch")
+        
+        return aggregated
     
     def aggregate_detections_by_class(self, all_detections: Dict[str, List[Dict]], model3_analysis: Optional[Dict] = None) -> Dict[str, Dict]:
         """
@@ -298,6 +481,9 @@ class EnsembleLogic:
             else:
                 class_info['final_confidence'] = 0.0
         
+        # Apply class priority: good condition overrides scratch
+        aggregated = self.apply_class_priority_ensemble(aggregated)
+        
         return aggregated
     
     def generate_ensemble_prediction(self, main_analysis, model2_analysis, model3_analysis, model4_analysis) -> Dict[str, Any]:
@@ -327,6 +513,17 @@ class EnsembleLogic:
                 was_conflict_resolved = resolved_model3_analysis and resolved_model3_analysis.get('conflict_resolved', False)
                 ensemble_score = 95 if not was_conflict_resolved else 85
                 
+                # Create numeric assessment for good condition
+                good_condition_assessment = {
+                    'score': ensemble_score,
+                    'severity_level': 'excellent',
+                    'damage_impact': 0.0,
+                    'confidence_factor': good_condition_confidence,
+                    'area_coverage': 0.0,
+                    'damage_breakdown': {},
+                    'total_damages': 0
+                }
+                
                 logger.info(f"Model 3 detected good_condition with confidence {good_condition_confidence:.3f} - overriding other predictions")
                 return {
                     'prediction': 'good_condition',
@@ -337,6 +534,16 @@ class EnsembleLogic:
                     'ensemble_score': ensemble_score,
                     'damage_detected': False,
                     'damage_types': [],
+                    'severity_score': 0.0,
+                    'numeric_assessment': {
+                        'overall_score': good_condition_assessment['score'],
+                        'severity_level': good_condition_assessment['severity_level'],
+                        'damage_impact': good_condition_assessment['damage_impact'],
+                        'confidence_factor': good_condition_assessment['confidence_factor'],
+                        'area_coverage_percent': good_condition_assessment['area_coverage'],
+                        'damage_breakdown': good_condition_assessment['damage_breakdown'],
+                        'total_damages': good_condition_assessment['total_damages']
+                    },
                     'models_agreement': {
                         'model3_good_condition': True,
                         'other_models_overridden': True,
@@ -382,14 +589,35 @@ class EnsembleLogic:
         # If no damage detections from any model
         total_detections = sum(len(dets) for dets in all_detections.values())
         if total_detections == 0:
+            # More conservative scoring when no detections found
+            no_damage_assessment = {
+                'score': 85,  # Reduced from 95 - less optimistic
+                'severity_level': 'good',  # Reduced from 'excellent'
+                'damage_impact': 0.0,
+                'confidence_factor': 0.75,  # Reduced confidence
+                'area_coverage': 0.0,
+                'damage_breakdown': {},
+                'total_damages': 0
+            }
+            
             return {
                 'prediction': 'no_damage',
                 'confidence': 0.85,
                 'reasoning': 'No damage detected by any model',
                 'override_applied': False,
-                'ensemble_score': 90,
+                'ensemble_score': 95,
                 'damage_detected': False,
                 'damage_types': [],
+                'severity_score': 0.0,
+                'numeric_assessment': {
+                    'overall_score': no_damage_assessment['score'],
+                    'severity_level': no_damage_assessment['severity_level'],
+                    'damage_impact': no_damage_assessment['damage_impact'],
+                    'confidence_factor': no_damage_assessment['confidence_factor'],
+                    'area_coverage_percent': no_damage_assessment['area_coverage'],
+                    'damage_breakdown': no_damage_assessment['damage_breakdown'],
+                    'total_damages': no_damage_assessment['total_damages']
+                },
                 'models_agreement': {
                     'all_models_agree_no_damage': True
                 },
@@ -399,63 +627,86 @@ class EnsembleLogic:
         # Aggregate detections by class (pass model3_analysis for conflict detection)
         aggregated_classes = self.aggregate_detections_by_class(all_detections, model3_analysis)
         
-        # Calculate overall damage severity
-        total_severity_score = 0.0
+        # Prepare detections for numeric scoring
+        all_detections_for_scoring = []
         detected_damage_types = []
         
         for class_name, class_info in aggregated_classes.items():
-            if class_info['final_confidence'] >= 0.5:  # Minimum ensemble confidence
+            if class_info['final_confidence'] >= 0.55:  # Lenient minimum ensemble confidence (lowered to 0.55 for better sensitivity)
                 detected_damage_types.append({
                     'type': class_name,
                     'confidence': class_info['final_confidence'],
                     'supporting_models': list(class_info['models'])
                 })
                 
-                # Add to severity score
-                severity_weights = {
-                    'severe_damage': 5.0,
-                    'glass_damage': 4.0,
-                    'crack': 3.5,
-                    'dent': 3.0,
-                    'structural_damage': 2.5,
-                    'scratch': 2.0,
-                    'lamp_damage': 3.5,
-                    'tire_damage': 4.0,
-                    'general_damage': 2.5
-                }
-                
-                severity = severity_weights.get(class_name, 2.0)
-                total_severity_score += severity * class_info['final_confidence']
+                # Add detection for numeric scoring
+                # Use the best detection from this class for scoring
+                best_detection = max(class_info['detections'], key=lambda x: x['confidence'])
+                all_detections_for_scoring.append({
+                    'class': class_name,
+                    'confidence': class_info['final_confidence'],
+                    'bbox': best_detection.get('bbox', []),
+                    'original_class': best_detection['original_class']
+                })
+        
+        # Calculate image area for area-based scoring (estimate if not available)
+        image_area = None
+        if main_analysis and hasattr(main_analysis, 'car_bbox') and main_analysis.car_bbox:
+            img_width = main_analysis.car_bbox[2]
+            img_height = main_analysis.car_bbox[3]
+            image_area = img_width * img_height
+        else:
+            # Default image area estimate (1920x1080)
+            image_area = 1920 * 1080
+        
+        # Use new numeric scoring system
+        numeric_assessment = self.calculate_numeric_status_score(all_detections_for_scoring, image_area)
         
         # Determine final prediction
         if not detected_damage_types:
-            prediction = 'no_damage'
-            confidence = 0.75
-            ensemble_score = 85
+            # Check if there were any detections that didn't meet the strict threshold
+            low_confidence_detections = sum(1 for class_info in aggregated_classes.values() 
+                                          if 0.3 <= class_info['final_confidence'] < 0.55)
+            
+            if low_confidence_detections > 0:
+                # Some potential damage detected but below threshold - be cautious
+                prediction = 'uncertain_condition'
+                confidence = 0.60
+                ensemble_score = 75
+                numeric_assessment = {
+                    'score': 75,
+                    'severity_level': 'fair',
+                    'damage_impact': 15.0,  # Some uncertainty penalty
+                    'confidence_factor': 0.60,
+                    'area_coverage': 0.0,
+                    'damage_breakdown': {'uncertain_areas': low_confidence_detections},
+                    'total_damages': low_confidence_detections
+                }
+            else:
+                # Truly no detections - more conservative than before
+                prediction = 'no_damage'
+                confidence = 0.70  # Reduced from 0.75
+                ensemble_score = 80  # Reduced from 90
+                numeric_assessment = {
+                    'score': 85,  # More conservative
+                    'severity_level': 'good',
+                    'damage_impact': 0.0,
+                    'confidence_factor': 0.70,
+                    'area_coverage': 0.0,
+                    'damage_breakdown': {},
+                    'total_damages': 0
+                }
         else:
             prediction = 'damage_detected'
             # Confidence based on agreement between models
             num_supporting_models = len(set().union(*[dt['supporting_models'] for dt in detected_damage_types]))
             confidence = min(0.6 + (num_supporting_models * 0.1), 0.95)
             
-            # Ensemble score based on severity with enhanced penalty for multiple damages
-            base_score = max(100 - (total_severity_score * 8), 10)
-            
-            # Additional penalty for multiple damage types to prevent excellent ratings
-            num_damage_types = len(detected_damage_types)
-            if num_damage_types >= 3:
-                # Significant penalty for 3+ damage types
-                multiple_damage_penalty = min(num_damage_types * 8, 40)
-                ensemble_score = max(base_score - multiple_damage_penalty, 15)
-            elif num_damage_types == 2:
-                # Moderate penalty for 2 damage types
-                ensemble_score = max(base_score - 15, 20)
-            else:
-                ensemble_score = base_score
-            
-            # Cap excellent ratings when damage is detected
-            if ensemble_score > 80 and num_damage_types > 0:
-                ensemble_score = min(ensemble_score, 75)
+            # Use numeric assessment score as ensemble score
+            ensemble_score = numeric_assessment['score']
+        
+        # Legacy severity score for backward compatibility
+        total_severity_score = numeric_assessment['damage_impact']
         
         # Generate unified detections
         try:
@@ -507,6 +758,16 @@ class EnsembleLogic:
             'damage_detected': len(detected_damage_types) > 0,
             'damage_types': detected_damage_types,
             'severity_score': round(total_severity_score, 2),
+            # Enhanced numeric assessment details
+            'numeric_assessment': {
+                'overall_score': numeric_assessment['score'],
+                'severity_level': numeric_assessment['severity_level'],
+                'damage_impact': numeric_assessment['damage_impact'],
+                'confidence_factor': numeric_assessment['confidence_factor'],
+                'area_coverage_percent': numeric_assessment['area_coverage'],
+                'damage_breakdown': numeric_assessment['damage_breakdown'],
+                'total_damages': numeric_assessment['total_damages']
+            },
             'models_agreement': {
                 'total_models_used': len([k for k, v in all_detections.items() if v]),
                 'damage_types_detected': len(detected_damage_types),
@@ -539,9 +800,7 @@ class EnsembleLogic:
         # Process main model (CarAnalysis with defect_groups)
         if main_analysis and hasattr(main_analysis, 'defect_groups'):
             for group in main_analysis.defect_groups:
-                # Filter out scratch classifications for main model (yolov8s)
-                if group.defect_type.lower() == 'scratch':
-                    continue
+                # Note: Removed scratch filtering to allow scratch detections in ensemble processing
                 if hasattr(group, 'combined_bbox') and group.combined_bbox:
                     normalized_detections.append({
                         'bbox': group.combined_bbox,
