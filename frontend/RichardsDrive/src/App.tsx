@@ -9,9 +9,12 @@ type AppState = 'upload' | 'analysis';
 function App() {
   const [currentState, setCurrentState] = useState<AppState>('upload');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [selectedModelType, setSelectedModelType] = useState<string>('s');
 
-  const handleFileUpload = (file: File) => {
+  const handleFileUpload = (file: File, modelType: string) => {
+    console.log('App.tsx - received modelType:', modelType);
     setUploadedFile(file);
+    setSelectedModelType(modelType);
     setCurrentState('analysis');
   };
 
@@ -93,7 +96,11 @@ function App() {
         )}
 
         {currentState === 'analysis' && uploadedFile && (
-          <AnalysisScreen file={uploadedFile} onBack={handleBackToUpload} />
+          <AnalysisScreen 
+            file={uploadedFile} 
+            modelType={selectedModelType}
+            onBack={handleBackToUpload} 
+          />
         )}
       </main>
     </div>

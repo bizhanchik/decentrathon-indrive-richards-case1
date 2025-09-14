@@ -9,6 +9,7 @@ Data2 classes: [0: scratch] -> maps to class 2 in merged dataset
 
 import os
 import shutil
+import zipfile
 from pathlib import Path
 import yaml
 import time
@@ -91,35 +92,108 @@ def generate_data_yaml(output_dir: Path, class_names: List[str]) -> None:
     print(f"Classes: {class_names}")
 
 
+def extract_zip_files(zip_files: List[Path], extract_dir: Path) -> bool:
+    """Extract zip files to the extraction directory."""
+    extract_dir.mkdir(parents=True, exist_ok=True)
+    
+    for zip_file in zip_files:
+        print(f"Extracting {zip_file.name}...")
+        try:
+            with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+                zip_ref.extractall(extract_dir)
+            print(f"Successfully extracted {zip_file.name}")
+        except Exception as e:
+            print(f"Error extracting {zip_file.name}: {e}")
+            return False
+    
+    return True
+
+
+# Define class mapping for unified dataset
+CLASS_MAPPING = {
+    'Dent': 0,
+    'Dislocation': 1,
+    'Scratch': 2,
+    'Shatter': 3,
+    'damaged': 4,
+    'severe damage': 5
+}
+
 def main():
-    """Main function to merge datasets."""
+    """Main function to prepare dataset."""
     # Define paths
     project_root = Path(__file__).parent.parent
-    data1_dir = project_root / 'data1'
-    data2_dir = project_root / 'data2'
+    zips_dir = project_root / 'zips'
+    extract_dir = project_root / 'data'
     output_dir = project_root / 'merged_dataset'
     
     print("=== Car Defect Dataset Preparation ===")
-    print(f"Data1 directory: {data1_dir}")
-    print(f"Data2 directory: {data2_dir}")
+    print(f"Zips directory: {zips_dir}")
+    print(f"Extract directory: {extract_dir}")
     print(f"Output directory: {output_dir}")
     
     # Verify input directories exist
-    if not data1_dir.exists():
-        raise FileNotFoundError(f"Data1 directory not found: {data1_dir}")
-    if not data2_dir.exists():
-        raise FileNotFoundError(f"Data2 directory not found: {data2_dir}")
+    if not zips_dir.exists():
+        print(f"Creating zips directory: {zips_dir}")
+        zips_dir.mkdir(parents=True, exist_ok=True)
+        print("Please place dataset zip files in the 'zips' directory and run this script again.")
+        return
     
-    # Define class mapping
-    # Data1: [0: dent, 1: dirt, 2: scratch]
-    # Data2: [0: scratch] -> maps to 2
-    merged_classes = ['dent', 'dirt', 'scratch']
-    data1_mapping = {0: 0, 1: 1, 2: 2}  # No change needed
-    data2_mapping = {0: 2}  # Map scratch (0) to scratch (2)
+    # Check if there are zip files in the zips directory
+    zip_files = list(zips_dir.glob('*.zip'))
+    if not zip_files:
+        print(f"No zip files found in {zips_dir}")
+        print("Please place dataset zip files in the 'zips' directory and run this script again.")
+        return
     
-    print(f"\nMerged classes: {merged_classes}")
-    print(f"Data1 class mapping: {data1_mapping}")
-    print(f"Data2 class mapping: {data2_mapping}")
+    # Extract zip files if needed
+    if not extract_dir.exists() or not (extract_dir / 'train').exists():
+        print(f"\n=== Extracting Dataset Files ===")
+        if extract_dir.exists():
+            print(f"Removing existing extract directory: {extract_dir}")
+            shutil.rmtree(extract_dir, ignore_errors=True)
+        
+        if not extract_zip_files(zip_files, extract_dir):
+            print("Error extracting zip files. Please check the zip files and try again.")
+            return
+    else:
+        print(f"\n=== Using existing extracted dataset ===")
+    
+    # Verify extracted directories exist
+    for split in ['train', 'valid', 'test']:
+        if not (extract_dir / split).exists():
+            print(f"Error: Expected directory '{split}' not found in extracted data.")
+            print(f"Please ensure your zip files contain the proper YOLO dataset structure.")
+            return
+        
+        for subdir in ['images', 'labels']:
+            if not (extract_dir / split / subdir).exists():
+                print(f"Error: Expected subdirectory '{subdir}' not found in '{split}' directory.")
+                print(f"Please ensure your zip files contain the proper YOLO dataset structure.")
+                return
+    
+    # Get class names from data.yaml if it exists
+    data_yaml_path = extract_dir / 'data.yaml'
+    if data_yaml_path.exists():
+        try:
+            with open(data_yaml_path, 'r') as f:
+                data_yaml = yaml.safe_load(f)
+                if 'names' in data_yaml:
+                    class_names = data_yaml['names']
+                    print(f"\nFound class names in data.yaml: {class_names}")
+                    # Update CLASS_MAPPING if needed
+                    for i, name in enumerate(class_names):
+                        if name in CLASS_MAPPING and CLASS_MAPPING[name] != i:
+                            print(f"Warning: Class '{name}' has different index in data.yaml ({i}) than in CLASS_MAPPING ({CLASS_MAPPING[name]})")
+                        CLASS_MAPPING[name] = i
+        except Exception as e:
+            print(f"Error reading data.yaml: {e}")
+    
+    # Define standardized classes from the mapping
+    merged_classes = list(CLASS_MAPPING.keys())
+    
+    print(f"\nStandardized classes: {merged_classes}")
+    print(f"Class mapping configuration: {CLASS_MAPPING}")
     
     # Create output directory structure
     if output_dir.exists():
@@ -141,24 +215,34 @@ def main():
     
     create_directory_structure(output_dir)
     
-    # Process data1
-    print("\n=== Processing Data1 ===")
-    data1_stats = copy_files_and_update_labels(data1_dir, output_dir, data1_mapping, 'data1')
-    print(f"Data1 stats: {data1_stats}")
+    # Copy files directly from extract_dir to output_dir
+    print("\n=== Processing Dataset ===")
+    stats = {'train': 0, 'valid': 0, 'test': 0}
     
-    # Process data2
-    print("\n=== Processing Data2 ===")
-    data2_stats = copy_files_and_update_labels(data2_dir, output_dir, data2_mapping, 'data2')
-    print(f"Data2 stats: {data2_stats}")
-    
-    # Calculate total stats
-    total_stats = {}
     for split in ['train', 'valid', 'test']:
-        total_stats[split] = data1_stats[split] + data2_stats[split]
+        source_images = extract_dir / split / 'images'
+        source_labels = extract_dir / split / 'labels'
+        target_images = output_dir / split / 'images'
+        target_labels = output_dir / split / 'labels'
+        
+        print(f"Processing {split} split...")
+        
+        # Copy images and labels
+        for img_file in source_images.glob('*.jpg'):
+            label_file = source_labels / f"{img_file.stem}.txt"
+            
+            # Copy image
+            shutil.copy2(img_file, target_images / img_file.name)
+            
+            # Copy label if it exists
+            if label_file.exists():
+                shutil.copy2(label_file, target_labels / label_file.name)
+            
+            stats[split] += 1
     
-    print(f"\n=== Merge Complete ===")
-    print(f"Total dataset stats: {total_stats}")
-    print(f"Total images: {sum(total_stats.values())}")
+    print(f"\n=== Processing Complete ===")
+    print(f"Dataset stats: {stats}")
+    print(f"Total images: {sum(stats.values())}")
     
     # Generate data.yaml
     generate_data_yaml(output_dir, merged_classes)

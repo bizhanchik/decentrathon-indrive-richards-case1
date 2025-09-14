@@ -138,7 +138,7 @@ class YOLOTrainer:
             'save_period': self.checkpoint_interval,
             'patience': 50,  # Early stopping patience
             'save': True,
-            'plots': True,
+            'plots': False,
             'val': True,
             # Data augmentation settings
             'hsv_h': 0.015,  # HSV-Hue augmentation
