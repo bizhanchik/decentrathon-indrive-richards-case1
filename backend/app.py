@@ -20,6 +20,7 @@ from dotenv import load_dotenv
 # Import our inference system
 from inference import CarDefectInference
 from ensemble_logic import EnsembleLogic
+from ensemble_boxes import weighted_boxes_fusion
 # Add model2, model3, model4 to path and import
 import sys
 from pathlib import Path
@@ -303,14 +304,8 @@ def initialize_model4_inference_engine():
 def convert_analysis_to_frontend_format(analysis, img_width: int, img_height: int) -> Dict[str, Any]:
     """Convert our analysis format to match frontend expectations"""
     
-    # Filter out scratch classifications for yolov8s model
-    if hasattr(analysis, 'defect_groups') and analysis.defect_groups:
-        filtered_groups = []
-        for group in analysis.defect_groups:
-            # Skip scratch classifications
-            if group.defect_type.lower() != 'scratch':
-                filtered_groups.append(group)
-        analysis.defect_groups = filtered_groups
+    # Note: Removed scratch filtering to allow scratch detections to show with bounding boxes
+    # All defect groups are now processed without filtering scratch classifications
     
     # Calculate cleanliness score based on defects
     if not analysis.car_detected:
@@ -746,6 +741,240 @@ async def analyze_image(file: UploadFile = File(...), real_time_detection: bool 
         logger.error(f"Error analyzing image {file.filename}: {e}")
         raise HTTPException(status_code=500, detail=f"Error analyzing image: {str(e)}")
 
+def extract_individual_boxes(main_analysis, model2_analysis, model3_analysis, model4_analysis, img_width: int, img_height: int):
+    """
+    Extract individual bounding boxes from all models in a standardized format
+    
+    Returns:
+        Dictionary with model names as keys and detection lists as values
+    """
+    individual_boxes = {
+        "model1": [],
+        "model2": [],
+        "model3": [],
+        "model4": []
+    }
+    
+    # Extract from main model (model1) - CarAnalysis object
+    if main_analysis and hasattr(main_analysis, 'defect_groups'):
+        for defect_group in main_analysis.defect_groups:
+            for detection in defect_group.detections:
+                # Convert detection to box format [x1, y1, x2, y2]
+                 x, y, w, h = detection.bbox
+                 box = [float(x), float(y), float(x + w), float(y + h)]
+                 individual_boxes["model1"].append({
+                     'box': box,
+                     'confidence': float(detection.confidence),
+                     'class': detection.class_name
+                 })
+    
+    # Extract from model2, model3, model4 (they have similar structure)
+    for model_name, analysis in [("model2", model2_analysis), ("model3", model3_analysis), ("model4", model4_analysis)]:
+        if analysis and analysis.get('detections'):
+            for detection in analysis['detections']:
+                box = detection.get('box', [])
+                if len(box) >= 4:
+                    individual_boxes[model_name].append({
+                        'box': [float(x) for x in box],  # Convert to Python floats
+                        'confidence': float(detection.get('confidence', 0.0)),
+                        'class': detection.get('class', 'unknown')
+                    })
+    
+    return individual_boxes
+
+def calculate_iou(box1, box2):
+    """
+    Calculate Intersection over Union (IoU) of two bounding boxes.
+    
+    Args:
+        box1, box2: [x1, y1, x2, y2] format
+    
+    Returns:
+        IoU value between 0 and 1
+    """
+    x1_1, y1_1, x2_1, y2_1 = box1
+    x1_2, y1_2, x2_2, y2_2 = box2
+    
+    # Calculate intersection area
+    x1_inter = max(x1_1, x1_2)
+    y1_inter = max(y1_1, y1_2)
+    x2_inter = min(x2_1, x2_2)
+    y2_inter = min(y2_1, y2_2)
+    
+    if x2_inter <= x1_inter or y2_inter <= y1_inter:
+        return 0.0
+    
+    intersection = (x2_inter - x1_inter) * (y2_inter - y1_inter)
+    
+    # Calculate union area
+    area1 = (x2_1 - x1_1) * (y2_1 - y1_1)
+    area2 = (x2_2 - x1_2) * (y2_2 - y1_2)
+    union = area1 + area2 - intersection
+    
+    return intersection / union if union > 0 else 0.0
+
+def apply_class_priority(detections):
+    """
+    Apply class priority where 'good condition' overrides 'scratch' when they overlap.
+    
+    Args:
+        detections: List of detection dictionaries with 'box', 'confidence', 'class'
+    
+    Returns:
+        Filtered list of detections with priority applied
+    """
+    if not detections:
+        return detections
+    
+    # Separate good condition and scratch detections
+    good_condition_detections = []
+    scratch_detections = []
+    other_detections = []
+    
+    for detection in detections:
+        class_name = detection['class'].lower()
+        if 'good' in class_name and 'condition' in class_name:
+            good_condition_detections.append(detection)
+        elif 'scratch' in class_name:
+            scratch_detections.append(detection)
+        else:
+            other_detections.append(detection)
+    
+    # If no good condition detections, return all detections
+    if not good_condition_detections:
+        return detections
+    
+    # Filter out scratch detections that overlap with good condition detections
+    filtered_scratch = []
+    iou_threshold = 0.3  # Overlap threshold for priority override
+    
+    for scratch_det in scratch_detections:
+        should_keep = True
+        for good_det in good_condition_detections:
+            iou = calculate_iou(scratch_det['box'], good_det['box'])
+            if iou > iou_threshold:
+                print(f"Class Priority: Removing scratch detection (IoU: {iou:.3f}) due to good condition override")
+                should_keep = False
+                break
+        
+        if should_keep:
+            filtered_scratch.append(scratch_det)
+    
+    # Combine all non-conflicting detections
+    final_detections = good_condition_detections + filtered_scratch + other_detections
+    
+    if len(final_detections) != len(detections):
+        print(f"Class Priority Applied: {len(detections)} -> {len(final_detections)} detections (removed {len(detections) - len(final_detections)} scratch conflicts)")
+    
+    return final_detections
+
+def apply_weighted_boxes_fusion(model_outputs: Dict[str, List], image_width: int, image_height: int, iou_thr: float = 0.7, skip_box_thr: float = 0.15):
+    """
+    Apply Weighted Boxes Fusion to combine predictions from multiple models with class priority override
+    
+    Args:
+        model_outputs: Dictionary with model names as keys and detection lists as values
+        image_width: Width of the original image
+        image_height: Height of the original image
+        iou_thr: IoU threshold for WBF
+        skip_box_thr: Skip boxes with confidence below this threshold
+    
+    Returns:
+        List of unified detections after WBF with class priority applied
+    """
+    # Apply class priority to each model's detections before fusion
+    print("Applying class priority before WBF...")
+    filtered_model_outputs = {}
+    for model_name, detections in model_outputs.items():
+        filtered_detections = apply_class_priority(detections)
+        filtered_model_outputs[model_name] = filtered_detections
+        if len(filtered_detections) != len(detections):
+            print(f"Model {model_name}: {len(detections)} -> {len(filtered_detections)} detections after class priority")
+    
+    boxes_list = []
+    scores_list = []
+    labels_list = []
+    
+    # Create a mapping of class names to indices
+    all_classes = set()
+    for model_detections in filtered_model_outputs.values():
+        for detection in model_detections:
+            all_classes.add(detection['class'])
+    
+    class_to_idx = {cls: idx for idx, cls in enumerate(sorted(all_classes))}
+    idx_to_class = {idx: cls for cls, idx in class_to_idx.items()}
+    
+    # Convert each model's predictions to WBF format with confidence filtering
+    for model_name, detections in filtered_model_outputs.items():
+        model_boxes = []
+        model_scores = []
+        model_labels = []
+        
+        for detection in detections:
+            # Only include detections with reasonable confidence (>= 0.2)
+            if detection['confidence'] >= 0.2:
+                # Convert to normalized coordinates [x1, y1, x2, y2]
+                x1, y1, x2, y2 = detection['box']
+                norm_box = [x1/image_width, y1/image_height, x2/image_width, y2/image_height]
+                
+                model_boxes.append(norm_box)
+                model_scores.append(detection['confidence'])
+                model_labels.append(class_to_idx[detection['class']])
+        
+        # Only add model predictions if it has at least one confident detection
+        if model_boxes:
+            boxes_list.append(model_boxes)
+            scores_list.append(model_scores)
+            labels_list.append(model_labels)
+    
+    # Apply WBF if we have detections from any models
+    if len(boxes_list) >= 1 and any(len(boxes) > 0 for boxes in boxes_list):
+        print(f"WBF Debug: Processing {len(boxes_list)} models with detections")
+        for i, (boxes, scores) in enumerate(zip(boxes_list, scores_list)):
+            print(f"Model {i+1}: {len(boxes)} boxes, avg confidence: {sum(scores)/len(scores) if scores else 0:.3f}")
+        
+        fused_boxes, fused_scores, fused_labels = weighted_boxes_fusion(
+            boxes_list, scores_list, labels_list,
+            weights=None,  # Equal weights for all models
+            iou_thr=iou_thr,
+            skip_box_thr=skip_box_thr
+        )
+        
+        print(f"WBF Result: {len(fused_boxes)} unified detections")
+        
+        # Convert back to original format with tighter bounds and apply class priority
+        unified_detections = []
+        for box, score, label in zip(fused_boxes, fused_scores, fused_labels):
+            # Only include reasonable fused detections (>= 0.25)
+            if score >= 0.25:
+                # Convert back to pixel coordinates
+                x1, y1, x2, y2 = box
+                
+                # Apply tightening factor to make bounds more focused
+                # Reduce box size by 10% from each edge to create tighter bounds
+                width = x2 - x1
+                height = y2 - y1
+                shrink_factor = 0.1
+                
+                x1_tight = x1 + (width * shrink_factor)
+                y1_tight = y1 + (height * shrink_factor)
+                x2_tight = x2 - (width * shrink_factor)
+                y2_tight = y2 - (height * shrink_factor)
+                
+                # Convert to pixel coordinates
+                pixel_box = [x1_tight*image_width, y1_tight*image_height, x2_tight*image_width, y2_tight*image_height]
+                
+                unified_detections.append({
+                    'box': [float(x) for x in pixel_box],  # Convert to regular Python floats
+                    'confidence': float(score),
+                    'class': idx_to_class[int(label)]
+                })
+        
+        print(f"Final WBF: {len(unified_detections)} high-confidence detections (class priority already applied)")
+        return unified_detections
+    
+    return []
+
 @app.post("/analyze-all")
 async def analyze_image_all_models(file: UploadFile = File(...)):
     """Analyze uploaded car image using Gemini + 4 models for comprehensive detection
@@ -854,7 +1083,34 @@ async def analyze_image_all_models(file: UploadFile = File(...)):
                     'inference_time': model4_result.get('inference_time_ms', 0)
                 }
             
-            # Combine results from all models including Gemini
+            # Check ensemble logic first for Model 3 override
+            ensemble_override = None
+            if ensemble_engine is not None:
+                try:
+                    ensemble_result = ensemble_engine.generate_ensemble_prediction(
+                        main_analysis, model2_analysis, model3_analysis, model4_analysis
+                    )
+                    # If Model 3 override is applied, skip WBF
+                    if ensemble_result.get('override_applied') and ensemble_result.get('override_model') == 'model3':
+                        logger.info(f"Model 3 override detected - skipping WBF. Prediction: {ensemble_result['prediction']}")
+                        ensemble_override = ensemble_result
+                        unified_boxes = []  # No WBF needed
+                    else:
+                        logger.info("No Model 3 override - proceeding with WBF")
+                except Exception as e:
+                    logger.error(f"Error in ensemble logic check: {e}")
+            
+            # Only run WBF if no Model 3 override
+            if ensemble_override is None:
+                # Extract individual boxes from all models
+                individual_boxes = extract_individual_boxes(main_analysis, model2_analysis, model3_analysis, model4_analysis, img_width, img_height)
+                
+                # Apply Weighted Boxes Fusion
+                unified_boxes = apply_weighted_boxes_fusion(individual_boxes, img_width, img_height)
+            else:
+                individual_boxes = {}
+            
+            # Combine results from all models
             combined_result = {
                 'gemini_analysis': {
                     'damage_detected': gemini_damage_detected == 1,
@@ -901,6 +1157,8 @@ async def analyze_image_all_models(file: UploadFile = File(...)):
                         'classes': ['crack', 'dent', 'glass shatter', 'lamp broken', 'scratch', 'tire flat']
                     }
                 },
+                'individual_boxes': individual_boxes,
+                'unified_boxes': unified_boxes,
                 'combined_summary': None  # Temporarily disable to test
             }
             
@@ -910,7 +1168,8 @@ async def analyze_image_all_models(file: UploadFile = File(...)):
             logger.info(f"Debug: model3_analysis type = {type(model3_analysis)}")
             logger.info(f"Debug: model4_analysis type = {type(model4_analysis)}")
             
-            combined_summary = generate_all_models_summary(main_analysis, model2_analysis, model3_analysis, model4_analysis)
+            # Pass ensemble override result to avoid duplicate processing
+            combined_summary = generate_all_models_summary(main_analysis, model2_analysis, model3_analysis, model4_analysis, ensemble_override)
             combined_result['combined_summary'] = combined_summary
             
             # Log the complete analysis results
@@ -1053,8 +1312,8 @@ def convert_defect_analysis_to_frontend_format(defect_analysis, img_width: int, 
     for detection in all_detections:
         defect_class = detection.get('class', '').lower()
         # Filter out flat tire classifications for all models
-        # Filter out scratch classifications for all models (as requested)
-        if defect_class not in ['tire flat', 'flat tire', 'scratch']:
+        # Note: Removed scratch filtering to allow scratch detections to show with bounding boxes
+        if defect_class not in ['tire flat', 'flat tire']:
             detections.append(detection)
         else:
             logger.info(f"Filtered out {defect_class} classification (confidence: {detection.get('confidence', 0):.2f})")
@@ -1113,10 +1372,11 @@ def convert_defect_analysis_to_frontend_format(defect_analysis, img_width: int, 
         img_area = img_width * img_height
         relative_size = defect_area / img_area
         
-        # Base severity on defect type (removed scratch and tire flat as they're filtered out)
+        # Base severity on defect type
         severity_map = {
             'crack': 'high',
-            'dent': 'medium', 
+            'dent': 'medium',
+            'scratch': 'low',  # Restored scratch severity mapping
             'glass shatter': 'high',
             'lamp broken': 'high'
         }
@@ -1274,14 +1534,18 @@ def generate_recommendations_from_ensemble(ensemble_result: Dict[str, Any]) -> L
     
     return recommendations
 
-def generate_all_models_summary(main_analysis, model2_analysis, model3_analysis, model4_analysis) -> Dict[str, Any]:
+def generate_all_models_summary(main_analysis, model2_analysis, model3_analysis, model4_analysis, ensemble_override=None) -> Dict[str, Any]:
     """Generate a combined summary from all 4 models using ensemble logic"""
     global ensemble_engine
     
     logger.info("Starting ensemble-based model summary generation")
     
-    # Use ensemble logic if available
-    if ensemble_engine is not None:
+    # Use provided ensemble override result if available
+    if ensemble_override is not None:
+        ensemble_result = ensemble_override
+        logger.info("Using pre-calculated ensemble override result")
+    # Otherwise use ensemble logic if available
+    elif ensemble_engine is not None:
         try:
             ensemble_result = ensemble_engine.generate_ensemble_prediction(
                 main_analysis, model2_analysis, model3_analysis, model4_analysis
@@ -1326,6 +1590,7 @@ def generate_all_models_summary(main_analysis, model2_analysis, model3_analysis,
     logger.info(f"DEBUG: model4_analysis = {model4_analysis}")
     
     main_available = main_analysis is not None
+    # Handle main_analysis as CarAnalysis object, others as dictionaries
     model2_available = model2_analysis is not None and bool(model2_analysis.get('detections'))
     model3_available = model3_analysis is not None and bool(model3_analysis.get('detections'))
     model4_available = model4_analysis is not None and bool(model4_analysis.get('detections'))

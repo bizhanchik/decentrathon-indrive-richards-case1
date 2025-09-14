@@ -12,6 +12,9 @@ google-generativeai==0.3.2
 requests==2.31.0
 aiohttp==3.9.1
 
+# Weighted Boxes Fusion for ensemble predictions
+ensemble-boxes==1.0.9
+
 # Already included from existing requirements.txt:
 # ultralytics
 # opencv-python
