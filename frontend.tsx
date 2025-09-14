@@ -51,15 +51,6 @@ interface SingleModelResult {
 }
 
 interface AllModelsAnalysisResult {
-  gemini_analysis?: {
-    damage_detected: boolean;
-    repaired_image: string | null;
-    model_info: {
-      type: string;
-      name: string;
-      description: string;
-    };
-  };
   main_analysis: SingleModelResult | null;
   model2_analysis: SingleModelResult | null;
   model3_analysis: SingleModelResult | null;
@@ -149,7 +140,6 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
       
       // Transform backend response to match frontend expectations
       const transformedResult = {
-        gemini_analysis: analysisResult.gemini_analysis || null,
         main_analysis: analysisResult.main_model?.analysis || null,
         model2_analysis: analysisResult.model2?.analysis || null,
         model3_analysis: analysisResult.model3?.analysis || null,
@@ -757,8 +747,6 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
                         </CardContent>
                       </Card>
 
-                      
-
                       {/* Individual Model Results */}
                       <Card className="bg-[#2c2c2c] border-black">
                         <CardHeader className="pb-3">
@@ -1006,41 +994,41 @@ export const AnalysisScreen: React.FC<AnalysisScreenProps> = ({ file, modelType,
                   )}
 
                   {/* AI-Repaired Preview */}
-                      {results.gemini_analysis?.damage_detected && results.gemini_analysis?.repaired_image && (
-                        <Card className="bg-[#2c2c2c] border-black animate-fade-in">
-                          <CardHeader className="pb-3">
-                            <CardTitle className="flex items-center text-white">
-                              <Sparkles className="w-5 h-5 mr-2 text-[#c1f21d]" />
-                              AI-Repaired Preview
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <p className="text-gray-400 text-sm mb-4">
-                              Our AI has generated a preview of how your car would look after repairs:
-                            </p>
-                            <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a] border border-[#c1f21d]/20">
-                              <img
-                                src={`data:image/jpeg;base64,${results.gemini_analysis.repaired_image}`}
-                                alt="AI-repaired vehicle preview"
-                                className="w-full h-auto transition-all duration-500 hover:scale-105"
-                              />
-                              <div className="absolute top-3 right-3">
-                                <div className="bg-[#c1f21d]/90 text-[#141414] px-3 py-1 rounded-full text-xs font-semibold">
-                                  AI Generated
-                                </div>
-                              </div>
+                  {'ai_analysis' in results && results.ai_analysis?.damage_detected && results.ai_analysis?.ai_repaired_image && (
+                    <Card className="bg-[#2c2c2c] border-black animate-fade-in">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="flex items-center text-white">
+                          <Sparkles className="w-5 h-5 mr-2 text-[#c1f21d]" />
+                          AI-Repaired Preview
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-gray-400 text-sm mb-4">
+                          Our AI has generated a preview of how your car would look after repairs:
+                        </p>
+                        <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a] border border-[#c1f21d]/20">
+                          <img
+                            src={`data:image/jpeg;base64,${results.ai_analysis.ai_repaired_image}`}
+                            alt="AI-repaired vehicle preview"
+                            className="w-full h-auto transition-all duration-500 hover:scale-105"
+                          />
+                          <div className="absolute top-3 right-3">
+                            <div className="bg-[#c1f21d]/90 text-[#141414] px-3 py-1 rounded-full text-xs font-semibold">
+                              AI Generated
                             </div>
-                            <div className="mt-4 p-3 bg-[#1a1a1a] rounded-lg border border-[#c1f21d]/20">
-                              <p className="text-[#c1f21d] text-sm font-medium mb-1">
-                                ✨ Preview Only
-                              </p>
-                              <p className="text-gray-400 text-xs">
-                                This is an AI-generated visualization of potential repairs. Actual results may vary.
-                              </p>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      )}
+                          </div>
+                        </div>
+                        <div className="mt-4 p-3 bg-[#1a1a1a] rounded-lg border border-[#c1f21d]/20">
+                          <p className="text-[#c1f21d] text-sm font-medium mb-1">
+                            ✨ Preview Only
+                          </p>
+                          <p className="text-gray-400 text-xs">
+                            This is an AI-generated visualization of potential repairs. Actual results may vary.
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
 
                   {/* Action Buttons */}
                   <div className="flex space-x-4 pt-4">

@@ -748,13 +748,19 @@ async def analyze_image(file: UploadFile = File(...), real_time_detection: bool 
 
 @app.post("/analyze-all")
 async def analyze_image_all_models(file: UploadFile = File(...)):
-    """Analyze uploaded car image using all 4 models for comprehensive detection
+    """Analyze uploaded car image using Gemini + 4 models for comprehensive detection
+    
+    Process Flow:
+    1. Gemini analyzes image for damage detection (returns 0 or 1)
+    2. If damage detected (1), Nano Banana generates repaired image
+    3. All 4 models (main, model2, model3, model4) analyze the image
+    4. Combined results returned including Gemini analysis and repaired image
     
     Args:
         file: The uploaded car image
     
     Returns:
-        Combined analysis from all 4 models: main model, model2, model3, and model4
+        Combined analysis from Gemini + all 4 models with optional repaired image
     """
     global inference_engine, defect_inference_engine, model3_inference_engine, model4_inference_engine
     
@@ -783,6 +789,10 @@ async def analyze_image_all_models(file: UploadFile = File(...)):
             import cv2
             img = cv2.imread(temp_file_path)
             img_height, img_width = img.shape[:2]
+            
+            # Step 1: Use Gemini for initial damage detection
+            logger.info(f"Running Gemini damage detection on: {file.filename}")
+            gemini_damage_detected, repaired_image = await analyze_and_repair_with_gemini(temp_file_path)
             
             # Initialize engines if needed
             if inference_engine is None:
@@ -844,8 +854,17 @@ async def analyze_image_all_models(file: UploadFile = File(...)):
                     'inference_time': model4_result.get('inference_time_ms', 0)
                 }
             
-            # Combine results from all models
+            # Combine results from all models including Gemini
             combined_result = {
+                'gemini_analysis': {
+                    'damage_detected': gemini_damage_detected == 1,
+                    'repaired_image': repaired_image if gemini_damage_detected == 1 else None,
+                    'model_info': {
+                        'type': 'gemini',
+                        'name': 'Gemini - AI Damage Detection & Nano Banana Repair',
+                        'description': 'Primary damage detection with AI-powered repair'
+                    }
+                },
                 'main_model': {
                     'available': main_analysis is not None,
                     'analysis': convert_analysis_to_frontend_format(main_analysis, img_width, img_height) if main_analysis else None,
@@ -894,7 +913,13 @@ async def analyze_image_all_models(file: UploadFile = File(...)):
             combined_summary = generate_all_models_summary(main_analysis, model2_analysis, model3_analysis, model4_analysis)
             combined_result['combined_summary'] = combined_summary
             
-            logger.info(f"All models analysis completed for {file.filename}")
+            # Log the complete analysis results
+            if gemini_damage_detected == 1:
+                logger.info(f"Gemini detected damage for {file.filename} - repaired image {'generated' if repaired_image else 'failed to generate'}")
+            else:
+                logger.info(f"Gemini detected no damage for {file.filename} - proceeding with 4-model analysis only")
+            
+            logger.info(f"All models analysis (including Gemini) completed for {file.filename}")
             return JSONResponse(content=combined_result)
             
         finally:
@@ -1583,9 +1608,9 @@ async def edit_image_with_text(request: ImageToImageRequest):
             detail=f"Error editing image: {e}"
         )
 
-async def analyze_frame_for_damage(image_data: bytes, real_time_detection: bool = True) -> Dict[str, Any]:
+async def analyze_frame_for_damage_single_model(image_data: bytes, real_time_detection: bool = True) -> Dict[str, Any]:
     """
-    Analyze a single video frame for car damage detection.
+    Analyze a single video frame for car damage detection using single model (legacy function).
     
     Args:
         image_data: Raw image bytes
@@ -1653,6 +1678,164 @@ async def analyze_frame_for_damage(image_data: bytes, real_time_detection: bool 
         logger.error(f"Error analyzing frame: {e}")
         return {"error": str(e)}
 
+async def analyze_frame_with_all_models(image_data: bytes) -> Dict[str, Any]:
+    """
+    Analyze a single video frame for car damage detection using all 4 models simultaneously.
+    
+    Args:
+        image_data: Raw image bytes
+    
+    Returns:
+        Aggregated results from all 4 models with ensemble decision
+    """
+    import asyncio
+    
+    try:
+        # Save frame to temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_file:
+            temp_file.write(image_data)
+            temp_path = temp_file.name
+        
+        try:
+            # Check if all models are initialized
+            if not all([inference_engine, defect_inference_engine, model3_inference_engine, model4_inference_engine]):
+                return {"error": "Not all inference engines are initialized"}
+            
+            # Get image dimensions
+            img = Image.open(temp_path)
+            img_width, img_height = img.size
+            
+            # Define async functions for each model
+            async def run_model1():
+                try:
+                    analysis = inference_engine.predict_image(temp_path)
+                    return convert_analysis_to_frontend_format(analysis, img_width, img_height)
+                except Exception as e:
+                    logger.error(f"Model 1 error: {e}")
+                    return {"error": str(e)}
+            
+            async def run_model2():
+                try:
+                    analysis = defect_inference_engine.predict_image(temp_path)
+                    return convert_analysis_to_frontend_format(analysis, img_width, img_height)
+                except Exception as e:
+                    logger.error(f"Model 2 error: {e}")
+                    return {"error": str(e)}
+            
+            async def run_model3():
+                try:
+                    analysis = model3_inference_engine.predict_image(temp_path)
+                    return convert_analysis_to_frontend_format(analysis, img_width, img_height)
+                except Exception as e:
+                    logger.error(f"Model 3 error: {e}")
+                    return {"error": str(e)}
+            
+            async def run_model4():
+                try:
+                    analysis = model4_inference_engine.predict_image(temp_path)
+                    return convert_analysis_to_frontend_format(analysis, img_width, img_height)
+                except Exception as e:
+                    logger.error(f"Model 4 error: {e}")
+                    return {"error": str(e)}
+            
+            # Run all models in parallel
+            model1_result, model2_result, model3_result, model4_result = await asyncio.gather(
+                run_model1(), run_model2(), run_model3(), run_model4(),
+                return_exceptions=True
+            )
+            
+            # Aggregate results
+            models_results = {
+                "model1": model1_result,
+                "model2": model2_result,
+                "model3": model3_result,
+                "model4": model4_result
+            }
+            
+            # Count damage detections from each model
+            damage_votes = 0
+            total_detections = 0
+            confidence_scores = []
+            all_areas = []
+            
+            for model_name, result in models_results.items():
+                if isinstance(result, dict) and "error" not in result:
+                    areas = result.get('heatmap', {}).get('areas', [])
+                    if len(areas) > 0:
+                        damage_votes += 1
+                        total_detections += len(areas)
+                        # Add areas with model source
+                        for area in areas:
+                            area['source_model'] = model_name
+                            all_areas.append(area)
+                        
+                        # Calculate average confidence for this model
+                        model_confidences = [area.get('confidence', 0.5) for area in areas]
+                        if model_confidences:
+                            confidence_scores.append(sum(model_confidences) / len(model_confidences))
+            
+            # Ensemble decision logic
+            # Damage is detected if at least 2 out of 4 models detect it
+            damage_detected = damage_votes >= 2
+            
+            # Calculate overall confidence
+            if confidence_scores:
+                avg_confidence = sum(confidence_scores) / len(confidence_scores)
+                if damage_votes >= 3:
+                    confidence_level = "high"
+                elif damage_votes >= 2:
+                    confidence_level = "medium"
+                else:
+                    confidence_level = "low"
+            else:
+                avg_confidence = 0.0
+                confidence_level = "low"
+            
+            # Determine damage level based on total detections and votes
+            if damage_detected:
+                if damage_votes >= 3 and total_detections >= 5:
+                    damage_level = "severe"
+                elif damage_votes >= 3 or total_detections >= 3:
+                    damage_level = "moderate"
+                else:
+                    damage_level = "minor"
+            else:
+                damage_level = "none"
+            
+            # Create aggregated result
+            result = {
+                "damage_detected": damage_detected,
+                "models_agreement": damage_votes,
+                "total_models": 4,
+                "total_detections": total_detections,
+                "confidence": confidence_level,
+                "confidence_score": avg_confidence,
+                "timestamp": int(time.time() * 1000),
+                "mode": "multi_model_realtime",
+                "heatmap": {"areas": all_areas},
+                "integrity": {
+                    "damaged": damage_detected,
+                    "damageLevel": damage_level
+                },
+                "models_results": {
+                    "model1_detections": len(model1_result.get('heatmap', {}).get('areas', [])) if isinstance(model1_result, dict) and "error" not in model1_result else 0,
+                    "model2_detections": len(model2_result.get('heatmap', {}).get('areas', [])) if isinstance(model2_result, dict) and "error" not in model2_result else 0,
+                    "model3_detections": len(model3_result.get('heatmap', {}).get('areas', [])) if isinstance(model3_result, dict) and "error" not in model3_result else 0,
+                    "model4_detections": len(model4_result.get('heatmap', {}).get('areas', [])) if isinstance(model4_result, dict) and "error" not in model4_result else 0
+                }
+            }
+            
+            return result
+            
+        finally:
+            # Clean up temporary file
+            if os.path.exists(temp_path):
+                os.unlink(temp_path)
+                
+    except Exception as e:
+        logger.error(f"Error analyzing frame with all models: {e}")
+        return {"error": str(e)}
+
 @app.websocket("/ws/realtime-detection")
 async def websocket_realtime_detection(websocket: WebSocket):
     """
@@ -1667,8 +1850,8 @@ async def websocket_realtime_detection(websocket: WebSocket):
             # Receive frame data from frontend
             data = await websocket.receive_bytes()
             
-            # Analyze the frame in real-time mode (faster, ML-only)
-            result = await analyze_frame_for_damage(data, real_time_detection=True)
+            # Analyze the frame using all 4 models simultaneously
+            result = await analyze_frame_with_all_models(data)
             
             # Send result back to frontend
             await websocket.send_json(result)

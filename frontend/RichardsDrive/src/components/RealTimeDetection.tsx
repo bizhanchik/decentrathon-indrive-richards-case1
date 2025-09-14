@@ -4,10 +4,13 @@ import { cn } from '@/lib/utils';
 
 interface DetectionResult {
   damage_detected: boolean;
-  yolo_detections: number;
-  gemini_confirmed: boolean;
+  models_agreement?: number;
+  total_models?: number;
+  total_detections?: number;
   confidence: 'low' | 'medium' | 'high';
+  confidence_score?: number;
   timestamp: number;
+  mode?: string;
   error?: string;
   heatmap?: {
     areas: Array<{
@@ -23,12 +26,22 @@ interface DetectionResult {
       };
       defect_type?: string;
       confidence?: number;
+      source_model?: string;
     }>;
   };
   integrity?: {
     damaged: boolean;
     damageLevel: 'none' | 'minor' | 'moderate' | 'severe';
   };
+  models_results?: {
+    model1_detections: number;
+    model2_detections: number;
+    model3_detections: number;
+    model4_detections: number;
+  };
+  // Legacy fields for backward compatibility
+  yolo_detections?: number;
+  gemini_confirmed?: boolean;
 }
 
 interface RealTimeDetectionProps {
@@ -130,21 +143,32 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
     
     if (!ctx) return;
 
-    // Set canvas size to match video
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Performance optimization: Downsample frame for faster processing
+    const maxWidth = 640; // Reduce from original resolution
+    const maxHeight = 480;
     
-    // Draw current video frame to canvas
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    let { videoWidth, videoHeight } = video;
     
-    // Convert to blob and send via WebSocket
+    // Calculate scaling to maintain aspect ratio
+    const scale = Math.min(maxWidth / videoWidth, maxHeight / videoHeight);
+    const scaledWidth = Math.floor(videoWidth * scale);
+    const scaledHeight = Math.floor(videoHeight * scale);
+    
+    // Set canvas size to downsampled dimensions
+    canvas.width = scaledWidth;
+    canvas.height = scaledHeight;
+    
+    // Draw and downsample current video frame to canvas
+    ctx.drawImage(video, 0, 0, scaledWidth, scaledHeight);
+    
+    // Convert to blob with optimized quality for faster processing
     canvas.toBlob((blob) => {
       if (blob && wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
         setIsAnalyzing(true);
         wsRef.current.send(blob);
       }
-    }, 'image/jpeg', 0.8);
-  }, []);
+    }, 'image/jpeg', 0.7); // Reduced quality for faster processing
+   }, []);
 
   const startDetection = useCallback(async () => {
     await startCamera();
@@ -178,7 +202,11 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
   const getStatusColor = (result: DetectionResult | null) => {
     if (!result) return 'text-gray-400';
     if (result.error) return 'text-red-400';
-    if (result.damage_detected) return 'text-red-400';
+    if (result.damage_detected) {
+      const agreement = result.models_agreement || 0;
+      if (agreement >= 3) return 'text-red-500'; // High confidence damage
+      return 'text-orange-400'; // Medium confidence damage
+    }
     return 'text-green-400';
   };
 
@@ -193,9 +221,14 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
     if (!result) return 'Ready to analyze';
     if (result.error) return `Error: ${result.error}`;
     if (result.damage_detected) {
-      return `Damage Detected (${result.confidence} confidence)`;
+      const agreement = result.models_agreement || 0;
+      const totalModels = result.total_models || 4;
+      const detections = result.total_detections || 0;
+      return `Damage Detected (${agreement}/${totalModels} models agree, ${detections} detections, ${result.confidence} confidence)`;
     }
-    return 'No Damage Detected';
+    const agreement = result.models_agreement || 0;
+    const totalModels = result.total_models || 4;
+    return `No Damage Detected (${agreement}/${totalModels} models agree)`;
   };
 
   const damageCount = sessionResults.filter(r => r.damage_detected && !r.error).length;
@@ -275,15 +308,15 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
                             boxShadow: `0 0 15px ${area.severity === 'high' ? '#ef444480' : area.severity === 'medium' ? '#f9731680' : '#eab30880'}`
                           }}
                         >
-                          {/* Label with Confidence */}
+                          {/* Label with Confidence and Model Source */}
                           <div className={cn(
                             "absolute -top-6 left-0 px-2 py-1 rounded text-xs font-semibold text-white shadow-lg",
                             area.severity === 'high' ? 'bg-red-500' :
                             area.severity === 'medium' ? 'bg-orange-500' :
                             'bg-yellow-500'
                           )}>
-                            {area.defect_type?.toUpperCase() || 'DEFECT'}
-                            {area.confidence && ` - ${Math.round(area.confidence * 100)}% conf`}
+                            {area.source_model?.toUpperCase() || 'MODEL'}: {area.defect_type?.toUpperCase() || 'DEFECT'}
+                            {area.confidence && ` - ${Math.round(area.confidence * 100)}%`}
                           </div>
                         </div>
                       )}
@@ -326,6 +359,28 @@ export const RealTimeDetection: React.FC<RealTimeDetectionProps> = ({ onBack }) 
                       {getStatusIcon(currentResult)}
                       <span className="font-medium">{getStatusText(currentResult)}</span>
                     </div>
+                    
+                    {/* Individual Model Results */}
+                    {currentResult && currentResult.models_results && (
+                      <div className="mt-3 grid grid-cols-4 gap-2 text-xs">
+                        <div className="text-center">
+                          <div className="text-blue-400 font-medium">Model 1</div>
+                          <div className="text-gray-300">{currentResult.models_results.model1_detections} det.</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-green-400 font-medium">Model 2</div>
+                          <div className="text-gray-300">{currentResult.models_results.model2_detections} det.</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-purple-400 font-medium">Model 3</div>
+                          <div className="text-gray-300">{currentResult.models_results.model3_detections} det.</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-orange-400 font-medium">Model 4</div>
+                          <div className="text-gray-300">{currentResult.models_results.model4_detections} det.</div>
+                        </div>
+                      </div>
+                    )}
                     
                     {totalAnalyzed > 0 && (
                       <div className="mt-2 text-sm text-gray-300">
