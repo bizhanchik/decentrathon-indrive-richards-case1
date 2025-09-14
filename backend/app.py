@@ -263,6 +263,15 @@ def initialize_model4_inference_engine():
 def convert_analysis_to_frontend_format(analysis, img_width: int, img_height: int) -> Dict[str, Any]:
     """Convert our analysis format to match frontend expectations"""
     
+    # Filter out scratch classifications for yolov8s model
+    if hasattr(analysis, 'defect_groups') and analysis.defect_groups:
+        filtered_groups = []
+        for group in analysis.defect_groups:
+            # Skip scratch classifications
+            if group.defect_type.lower() != 'scratch':
+                filtered_groups.append(group)
+        analysis.defect_groups = filtered_groups
+    
     # Calculate cleanliness score based on defects
     if not analysis.car_detected:
         cleanliness_score = 0
@@ -800,7 +809,33 @@ def convert_defect_analysis_to_frontend_format(defect_analysis, img_width: int, 
             'heatmap': {'areas': []}
         }
     
-    detections = defect_analysis['detections']
+    # Filter out unwanted classifications
+    all_detections = defect_analysis['detections']
+    detections = []
+    for detection in all_detections:
+        defect_class = detection.get('class', '').lower()
+        # Filter out flat tire classifications for all models
+        # Filter out scratch classifications for all models (as requested)
+        if defect_class not in ['tire flat', 'flat tire', 'scratch']:
+            detections.append(detection)
+        else:
+            logger.info(f"Filtered out {defect_class} classification (confidence: {detection.get('confidence', 0):.2f})")
+    
+    # If no detections remain after filtering, return clean result
+    if not detections:
+        return {
+            'cleanliness': {
+                'score': 95,
+                'status': 'excellent',
+                'description': 'No significant defects detected after filtering'
+            },
+            'integrity': {
+                'damaged': False,
+                'damageLevel': 'none',
+                'description': 'No structural damage detected'
+            },
+            'heatmap': {'areas': []}
+        }
     num_defects = len(detections)
     
     # Calculate score based on number and size of defects
@@ -840,19 +875,17 @@ def convert_defect_analysis_to_frontend_format(defect_analysis, img_width: int, 
         img_area = img_width * img_height
         relative_size = defect_area / img_area
         
-        # Base severity on defect type
+        # Base severity on defect type (removed scratch and tire flat as they're filtered out)
         severity_map = {
             'crack': 'high',
             'dent': 'medium', 
             'glass shatter': 'high',
-            'lamp broken': 'high',
-            'scratch': 'low',
-            'tire flat': 'high'
+            'lamp broken': 'high'
         }
         severity = severity_map.get(defect_class, 'medium')
         
         # Adjust severity based on size for certain defect types
-        if defect_class in ['crack', 'dent', 'scratch'] and relative_size > 0.01:
+        if defect_class in ['crack', 'dent'] and relative_size > 0.01:
             if severity == 'low':
                 severity = 'medium'
             elif severity == 'medium':

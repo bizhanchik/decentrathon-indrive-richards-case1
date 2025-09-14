@@ -166,11 +166,10 @@ class EnsembleLogic:
             'dent': 3.0,
             'damaged-dent': 3.0,
             'dislocation': 2.5,
-            'scratch': 2.0,
             'damaged-scratch': 2.0,
             'lamp broken': 3.5,
-            'tire flat': 4.0,
             'damaged': 2.5
+            # Note: 'scratch' and 'tire flat' removed as they are filtered out
         }
         
         total_severity = 0.0
@@ -196,7 +195,6 @@ class EnsembleLogic:
         class_mapping = {
             'dent': 'dent',
             'damaged-dent': 'dent',
-            'scratch': 'scratch', 
             'damaged-scratch': 'scratch',
             'shatter': 'glass_damage',
             'glass shatter': 'glass_damage',
@@ -204,9 +202,9 @@ class EnsembleLogic:
             'severe': 'severe_damage',
             'crack': 'crack',
             'lamp broken': 'lamp_damage',
-            'tire flat': 'tire_damage',
             'dislocation': 'structural_damage',
             'damaged': 'general_damage'
+            # Note: 'scratch' and 'tire flat' mappings removed as they are filtered out
         }
         
         return class_mapping.get(class_name, class_name)
@@ -541,6 +539,9 @@ class EnsembleLogic:
         # Process main model (CarAnalysis with defect_groups)
         if main_analysis and hasattr(main_analysis, 'defect_groups'):
             for group in main_analysis.defect_groups:
+                # Filter out scratch classifications for main model (yolov8s)
+                if group.defect_type.lower() == 'scratch':
+                    continue
                 if hasattr(group, 'combined_bbox') and group.combined_bbox:
                     normalized_detections.append({
                         'bbox': group.combined_bbox,
@@ -567,6 +568,10 @@ class EnsembleLogic:
                             confidence = detection.get('confidence', detection.get('conf', 0.5))
                             
                             if bbox and class_name:
+                                # Filter out tire flat classifications for all models
+                                class_name_lower = str(class_name).lower()
+                                if class_name_lower in ['tire flat', 'flat tire']:
+                                    continue
                                 # Ensure bbox is in [x1, y1, x2, y2] format
                                 if len(bbox) >= 4:
                                     normalized_detections.append({
